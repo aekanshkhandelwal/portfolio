@@ -1,6 +1,5 @@
 .contact-section {
     position: relative;
-    padding: 120px 0;
     overflow: hidden;
 }
 
@@ -161,6 +160,16 @@
     gap: 24px;
 }
 
+/* LinkedIn : GitHub = 2:3 */
+.contact-side-grid>.side-row:first-child {
+    grid-template-columns: 2fr 3fr;
+}
+
+/* Email : Phone = 3:2 */
+.contact-side-grid>.side-row:last-child {
+    grid-template-columns: 3fr 2fr;
+}
+
 .c-icon {
     font-size: 2rem;
     margin-bottom: 24px;
@@ -256,6 +265,14 @@
     padding: 32px;
 }
 
+.card-mini .c-val {
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: normal;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
     .contact-bento-grid {
@@ -264,13 +281,72 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    .contact-side-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* Row 1 & Row 3: always 2 cards side by side */
     .side-row {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    /* Row 2: status card spans full width naturally */
+    .card-status {
+        width: 100%;
+        padding: 20px 18px;
     }
 
     .bento-card {
-        padding: 32px;
-        border-radius: 28px;
+        padding: 18px 16px;
+        border-radius: 18px;
+    }
+
+    .c-icon {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+
+    .c-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
+    }
+
+    .c-val {
+        font-size: 0.85rem;
+    }
+
+    .status-text {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-side-grid {
+        gap: 10px;
+    }
+
+    /* Keep 2 cards on row 1 and row 3, just tighter */
+    .side-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .bento-card {
+        padding: 14px 12px;
+        border-radius: 14px;
+    }
+
+    .c-icon {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+    }
+
+    .c-val {
+        font-size: 0.78rem;
     }
 }

@@ -369,4 +369,26 @@
     .hero-visual {
         display: none;
     }
+
+    .hero-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .hero-actions .btn {
+        padding: 10px 20px;
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-actions {
+        gap: 8px;
+    }
+
+    .hero-actions .btn {
+        padding: 9px 16px;
+        font-size: 0.78rem;
+    }
 }

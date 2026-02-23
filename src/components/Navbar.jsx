@@ -71,11 +71,7 @@ export default function Navbar() {
                     AK<span className="dot">.</span>
                 </a>
 
-                <button className={`menu-toggle ${isOpen ? 'active' : ''}`} onClick={toggleMenu} aria-label="Toggle Menu">
-                    <span className="line"></span>
-                    <span className="line"></span>
-                    <span className="line"></span>
-                </button>
+
 
                 <ul className="nav-links">
                     {links.map((id, idx) => (
@@ -90,6 +86,32 @@ export default function Navbar() {
                         </li>
                     ))}
                 </ul>
+                <div className="resume-preview-wrap">
+                    <a
+                        href="https://drive.google.com/file/d/19gRBBPgUK3UpEXSJUnXEYG7WXx_LYpyb/view?usp=sharing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="nav-resume-btn"
+                    >
+                        Resume
+                    </a>
+                    <div className="resume-hover-preview">
+                        <div className="resume-hover-preview-inner">
+                            <a
+                                href="https://drive.google.com/file/d/19gRBBPgUK3UpEXSJUnXEYG7WXx_LYpyb/view?usp=sharing"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <img src="/resume.png" alt="Resume Preview" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <button className={`menu-toggle ${isOpen ? 'active' : ''}`} onClick={toggleMenu} aria-label="Toggle Menu">
+                    <span className="line"></span>
+                    <span className="line"></span>
+                    <span className="line"></span>
+                </button>
             </div>
         </nav>
     )

@@ -37,6 +37,14 @@ export default function Hero() {
                     <div className="hero-actions">
                         <a href="#projects" className="btn btn-primary magnetic-btn">View Projects</a>
                         <a href="#contact" className="btn btn-outline magnetic-btn">Get In Touch</a>
+                        <a
+                            href="https://drive.google.com/file/d/19gRBBPgUK3UpEXSJUnXEYG7WXx_LYpyb/view?usp=sharing"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-resume magnetic-btn"
+                        >
+                            <span className="resume-icon">↗</span> Resume
+                        </a>
                     </div>
                 </div>
                 <div className="hero-visual">

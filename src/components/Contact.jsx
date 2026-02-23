@@ -142,26 +142,26 @@ export default function Contact() {
 
                         <div className="side-row">
                             {/* Email Card */}
-                            <div className="bento-card card-mini reveal" onMouseMove={handleMouseMove}>
+                            <a href="mailto:khandelwalaekansh@gmail.com" className="bento-card card-mini reveal" onMouseMove={handleMouseMove}>
                                 <div className="b-noise"></div>
                                 <div className="b-glow"></div>
                                 <div className="c-icon">✉️</div>
                                 <div className="c-info">
-                                    <span className="c-label">Channel</span>
-                                    <span className="c-val">Email</span>
+                                    <span className="c-label">Email</span>
+                                    <span className="c-val">khandelwalaekansh@gmail.com</span>
                                 </div>
-                            </div>
+                            </a>
 
                             {/* Phone Card */}
-                            <div className="bento-card card-mini reveal" onMouseMove={handleMouseMove}>
+                            <a href="tel:+918432616479" className="bento-card card-mini reveal" onMouseMove={handleMouseMove}>
                                 <div className="b-noise"></div>
                                 <div className="b-glow"></div>
                                 <div className="c-icon">📞</div>
                                 <div className="c-info">
-                                    <span className="c-label">Direct</span>
-                                    <span className="c-val">Voice</span>
+                                    <span className="c-label">Phone</span>
+                                    <span className="c-val">+91 84326 16479</span>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
