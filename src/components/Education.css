@@ -1,0 +1,154 @@
+.edu-section {
+    background: transparent;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 45px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom,
+            var(--accent),
+            var(--accent-2),
+            rgba(124, 58, 237, 0.1),
+            transparent);
+    opacity: 0.5;
+}
+
+.tl-item {
+    position: relative;
+}
+
+.tl-pulse {
+    position: absolute;
+    left: -38px;
+    top: 24px;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    z-index: 2;
+    box-shadow: 0 0 15px var(--accent);
+    transform: rotate(45deg);
+    /* Diamond Shape */
+}
+
+.tl-pulse::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 1px solid var(--accent);
+    transform: rotate(0deg);
+    /* Counter-rotate is not needed, let ripple be diamond too */
+    animation: ripple-sh 2s infinite;
+}
+
+@keyframes ripple-sh {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(2.2);
+        opacity: 0;
+    }
+}
+
+.tl-card {
+    padding: 32px;
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 28px;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.tl-card:hover {
+    transform: translateX(10px);
+    border-color: rgba(124, 58, 237, 0.3);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.tl-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+}
+
+.tl-info {
+    flex: 1;
+}
+
+.tl-meta {
+    margin-bottom: 12px;
+}
+
+.tl-date {
+    font-size: 0.85rem;
+    color: var(--accent-2);
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.tl-card h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--text);
+    line-height: 1.25;
+}
+
+.tl-inst {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* ── GPA Simplified Badge ── */
+.tl-viz {
+    flex-shrink: 0;
+}
+
+.cgpa-badge {
+    padding: 8px 16px;
+    background: rgba(6, 182, 212, 0.05);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--accent-2);
+    font-family: var(--mono);
+    letter-spacing: -0.01em;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .tl-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+
+    .tl-card {
+        padding: 24px;
+    }
+
+    .gpa-container {
+        width: 70px;
+        height: 70px;
+    }
+}

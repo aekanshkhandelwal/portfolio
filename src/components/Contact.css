@@ -1,0 +1,276 @@
+.contact-section {
+    position: relative;
+    padding: 120px 0;
+    overflow: hidden;
+}
+
+/* ── Glow Backgrounds ── */
+.contact-glow {
+    position: absolute;
+    width: 40vw;
+    height: 40vw;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.1;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.contact-glow-1 {
+    top: -10%;
+    right: -5%;
+    background: var(--accent);
+}
+
+.contact-glow-2 {
+    bottom: -10%;
+    left: -5%;
+    background: var(--accent-2);
+}
+
+/* ── Bento Grid Architecture ── */
+.contact-bento-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+    margin-top: 60px;
+    perspective: 2000px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Base Card Styling ── */
+.bento-card {
+    position: relative;
+    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 32px;
+    padding: 40px;
+    overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-style: preserve-3d;
+}
+
+.bento-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 50%, rgba(255, 255, 255, 0.05));
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    padding: 1px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.b-noise {
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    pointer-events: none;
+    filter: url(#contactNoiseFilter);
+    z-index: -1;
+}
+
+.b-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(124, 58, 237, 0.12),
+            transparent 80%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.bento-card:hover .b-glow {
+    opacity: 1;
+}
+
+.bento-card:hover {
+    border-color: rgba(124, 58, 237, 0.3);
+    transform: translateY(-8px) rotateX(4deg) rotateY(-2deg);
+    background: rgba(15, 23, 42, 0.5);
+    box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(124, 58, 237, 0.1);
+}
+
+/* ── Main Form Card ── */
+.card-form h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 32px;
+    color: #fff;
+    letter-spacing: -0.02em;
+}
+
+.contact-form-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(124, 58, 237, 0.05);
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
+}
+
+/* ── Side Grid Polish ── */
+.contact-side-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.side-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.c-icon {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    transition: transform 0.4s ease;
+}
+
+.bento-card:hover .c-icon {
+    transform: scale(1.2) rotate(12deg);
+}
+
+.c-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.c-label {
+    font-size: 0.7rem;
+    font-weight: 950;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 4px;
+}
+
+.c-val {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    word-break: break-all;
+}
+
+/* ── Status Indicator Card ── */
+.card-status {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.pulse-dot {
+    width: 12px;
+    height: 12px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #10b981;
+    animation: p-pulse 2s infinite;
+}
+
+@keyframes p-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.8);
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.status-text {
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: #10b981;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.success-note {
+    font-size: 0.9rem;
+    color: #10b981;
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 800;
+}
+
+/* ── Mini Cards ── */
+.card-mini {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .contact-bento-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .side-row {
+        grid-template-columns: 1fr;
+    }
+
+    .bento-card {
+        padding: 32px;
+        border-radius: 28px;
+    }
+}
