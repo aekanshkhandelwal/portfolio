@@ -36,6 +36,14 @@ export default function Hero() {
                     </p>
                     <div className="hero-actions">
                         <a href="#projects" className="btn btn-primary magnetic-btn">View Projects</a>
+                        <a
+                            href="https://aekansh-ragbot.vercel.app/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-ai magnetic-btn"
+                        >
+                            Chat with my AI
+                        </a>
                         <a href="#contact" className="btn btn-outline magnetic-btn">Get In Touch</a>
                         <a
                             href="https://drive.google.com/file/d/19gRBBPgUK3UpEXSJUnXEYG7WXx_LYpyb/view?usp=sharing"

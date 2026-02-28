@@ -3,6 +3,25 @@ import './Projects.css';
 
 const projects = [
     {
+        title: "Aekansh's RAG BOT 🤖✨",
+        tags: ['React', 'Gemini API', 'Pinecone', 'Node.js', 'Markdown'],
+        accent: 'accent-teal',
+        link: 'https://aekansh-ragbot.vercel.app/',
+        image: '/previews/ragbot.gif',
+        desc: 'A beautiful, interactive Retrieval-Augmented Generation (RAG) chatbot application.',
+        bullets: [
+            'Retrieval-Augmented Generation using Google Gemini API and Pinecone Vector Database for context-aware responses.',
+            'Features a fully CSS-animated "Golden Robot" companion that reacts to generation states.',
+            'Premium glassmorphism UI with frosted effects, dynamic glow shadows, and mobile-first responsive design.',
+            'Robust Markdown rendering with prompt caching for instantaneous results.',
+        ],
+        metrics: [
+            { val: 'RAG', label: 'Architecture' },
+            { val: 'Gemini', label: 'Engine' },
+            { val: 'Pinecone', label: 'DB' },
+        ],
+    },
+    {
         title: 'Linear Clone - Project Management Tool',
         tags: ['Node.js', 'MongoDB', 'React', 'JWT', 'OAuth'],
         accent: 'accent-blue',
@@ -146,6 +165,7 @@ const projects = [
         title: 'Movie Recommender System',
         tags: ['Python', 'Machine Learning', 'ML Algorithms'],
         accent: 'accent-purple',
+        link: 'https://github.com/aekanshkhandelwal/movie_recommendation_System',
         desc: 'Developed a personalized movie recommendation system to enhance user engagement using ML algorithms.',
         bullets: [
             'Analyzed user preferences and ratings to provide tailored recommendations.',
@@ -160,6 +180,7 @@ const projects = [
         title: 'Social Media Platform (Prototype)',
         tags: ['Python', 'UI Prototype'],
         accent: 'accent-blue',
+        link: 'https://github.com/aekanshkhandelwal/social_media_platform/tree/main/social-media-website-main',
         desc: 'Built a 2-user Python app allowing photo sharing, likes, comments, and messaging.',
         bullets: [
             'Developed core social features including image uploads and communication.',
@@ -174,6 +195,7 @@ const projects = [
         title: 'Library Management System',
         tags: ['Admin/Student Interface', 'Management System'],
         accent: 'accent-purple',
+        link: 'https://github.com/aekanshkhandelwal/Library-Management-System-in-C',
         desc: 'Managed records of books and students with separate admin & student interfaces.',
         bullets: [
             'Organized inventory and tracking for book loans and returns.',

@@ -177,28 +177,179 @@ ul {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 45px;
-  height: 45px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  width: 64px;
+  height: 64px;
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  color: var(--text);
-  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
-  transition: var(--transition);
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
   z-index: 100;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.05);
 }
 
 .scroll-top.visible {
   opacity: 1;
   pointer-events: all;
+  animation: pulse-ai-new 3s infinite;
 }
 
 .scroll-top:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: #22d3ee;
+  background: rgba(30, 41, 59, 0.6);
+  transform: scale(1.1) translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(34, 211, 238, 0.2);
+}
+
+/* ── Redesigned Robot Mascot (Reference Match) ── */
+.robot-mascot {
+  width: 34px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: robot-float-new 4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+.robot-head {
+  width: 30px;
+  height: 22px;
+  background: #f8fafc;
+  border: 1.2px solid #334155;
+  border-radius: 9px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset -1.5px -1.5px 0 rgba(0, 0, 0, 0.05);
+}
+
+.robot-visor {
+  width: 22px;
+  height: 14px;
+  background: #1e293b;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.robot-eyes {
+  display: flex;
+  gap: 3px;
+  margin-top: 1px;
+}
+
+.eye {
+  width: 5.5px;
+  height: 4px;
+  background: #22d3ee;
+  border-radius: 3px 3px 1px 1px;
+  box-shadow: 0 0 5px rgba(34, 211, 238, 0.6);
+  animation: robot-blink-visor 4s infinite;
+}
+
+.robot-mouth {
+  width: 5px;
+  height: 2.5px;
+  background: #22d3ee;
+  border-radius: 1px 1px 3px 3px;
+  margin-top: 1.5px;
+  box-shadow: 0 0 3px rgba(34, 211, 238, 0.4);
+}
+
+.robot-body {
+  width: 24px;
+  height: 23px;
+  background: #f8fafc;
+  border: 1.2px solid #334155;
+  border-radius: 40% 40% 50% 50%;
+  margin-top: -5px;
+  position: relative;
+  box-shadow: inset -1.5px -1.5px 0 rgba(0, 0, 0, 0.05);
+}
+
+.robot-body::before {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #22d3ee;
+  opacity: 0.6;
+}
+
+.robot-arm {
+  position: absolute;
+  width: 6px;
+  height: 14px;
+  background: #f8fafc;
+  border: 1.2px solid #334155;
+  border-radius: 8px;
+  top: 3px;
+}
+
+.robot-arm.left {
+  left: -6px;
+  transform: rotate(15deg);
+}
+
+.robot-arm.right {
+  right: -6px;
+  transform: rotate(-15deg);
+}
+
+@keyframes robot-float-new {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+}
+
+@keyframes robot-blink-visor {
+
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes pulse-ai-new {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.2);
+  }
+
+  70% {
+    box-shadow: 0 0 0 15px rgba(34, 211, 238, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0);
+  }
 }
 
 /* ── Mobile Section Spacing ── */

@@ -144,6 +144,27 @@
 .hero-actions {
     display: flex;
     gap: 16px;
+    margin-top: 10px;
+}
+
+.hero-actions .btn {
+    padding: 8px 18px;
+    font-size: 0.88rem;
+    white-space: nowrap;
+}
+
+.btn-ai {
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+}
+
+.btn-ai:hover {
+    background: rgba(6, 182, 212, 0.1);
+    border-color: var(--accent-2);
+    color: #fff;
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.2);
 }
 
 .hero-visual {
@@ -371,14 +392,13 @@
     }
 
     .hero-actions {
-        flex-wrap: wrap;
         justify-content: center;
-        gap: 10px;
+        gap: 8px;
     }
 
     .hero-actions .btn {
-        padding: 10px 20px;
-        font-size: 0.82rem;
+        padding: 8px 16px;
+        font-size: 0.8rem;
     }
 }
 

@@ -36,12 +36,29 @@ function App() {
         <Contact />
       </main>
       <Footer />
-      <button
+      <a
+        href="https://aekansh-ragbot.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
         className={`scroll-top ${showTop ? 'visible' : ''}`}
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Chat with my AI"
       >
-        ↑
-      </button>
+        <div className="robot-mascot">
+          <div className="robot-head">
+            <div className="robot-visor">
+              <div className="robot-eyes">
+                <div className="eye left"></div>
+                <div className="eye right"></div>
+              </div>
+              <div className="robot-mouth"></div>
+            </div>
+          </div>
+          <div className="robot-body">
+            <div className="robot-arm left"></div>
+            <div className="robot-arm right"></div>
+          </div>
+        </div>
+      </a>
     </>
   )
 }
