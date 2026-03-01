@@ -3,7 +3,7 @@ import './Projects.css';
 
 const projects = [
     {
-        title: "Aekansh's RAG BOT 🤖✨",
+        title: "Personalized RAG BOT 🤖✨",
         tags: ['React', 'Gemini API', 'Pinecone', 'Node.js', 'Markdown'],
         accent: 'accent-teal',
         link: 'https://aekansh-ragbot.vercel.app/',
