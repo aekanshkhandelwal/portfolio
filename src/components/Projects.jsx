@@ -213,6 +213,7 @@ export default function Projects() {
     const [viewMode, setViewMode] = useState('grid'); // 'grid', 'list', 'swipe'
     useReveal([viewMode]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isFlipped, setIsFlipped] = useState(false);
 
     const handleMouseMove = (e) => {
         const card = e.currentTarget;
@@ -226,10 +227,24 @@ export default function Projects() {
 
     const nextProject = () => {
         setCurrentIndex((prev) => (prev + 1) % projects.length);
+        setIsFlipped(false);
     };
 
     const prevProject = () => {
         setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
+        setIsFlipped(false);
+    };
+
+    const handleCardClick = (e, idx) => {
+        // Only trigger flip in swipe view on mobile (implicitly handled by CSS media query)
+        if (viewMode === 'swipe') {
+            if (idx === currentIndex) {
+                setIsFlipped(!isFlipped);
+            } else {
+                setCurrentIndex(idx);
+                setIsFlipped(false);
+            }
+        }
     };
 
     return (
@@ -288,14 +303,15 @@ export default function Projects() {
                                         className={`swipe-card-item ${idx === currentIndex ? 'active' : ''} ${idx < currentIndex ? 'prev' : ''} ${idx > currentIndex ? 'next' : ''}`}
                                         key={idx}
                                         onMouseMove={handleMouseMove}
+                                        onClick={(e) => handleCardClick(e, idx)}
                                     >
                                         <div className="reveal visible">
                                             {project.link ? (
-                                                <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-card-wrapper">
-                                                    <ProjectCard project={project} />
-                                                </a>
+                                                <div className="project-card-wrapper">
+                                                    <ProjectCard project={project} isFlipped={idx === currentIndex && isFlipped} />
+                                                </div>
                                             ) : (
-                                                <ProjectCard project={project} />
+                                                <ProjectCard project={project} isFlipped={idx === currentIndex && isFlipped} />
                                             )}
                                         </div>
                                     </div>
@@ -336,15 +352,22 @@ export default function Projects() {
                         </div>
                     )}
                 </div>
+                {viewMode === 'swipe' && isFlipped && projects[currentIndex].link && (
+                    <div className="swipe-action-overlay reveal visible">
+                        <a href={projects[currentIndex].link} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                            Visit Live Project ↗
+                        </a>
+                    </div>
+                )}
             </div>
         </section>
     );
 }
 
 // Sub-component for the card content to keep Projects.jsx clean
-function ProjectCard({ project }) {
+function ProjectCard({ project, isFlipped }) {
     return (
-        <div className={`project-card ${project.accent}`}>
+        <div className={`project-card ${project.accent} ${isFlipped ? 'is-flipped' : ''}`}>
             <div className="card-glow"></div>
             <div className="pc-preview">
                 <div className="preview-overlay">

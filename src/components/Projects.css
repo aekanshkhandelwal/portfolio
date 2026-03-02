@@ -2,6 +2,8 @@
     position: relative;
     background: transparent;
     padding: 100px 0;
+    overflow-x: clip;
+    /* Prevent 3D elements from creating horizontal scroll */
 }
 
 .section-header {
@@ -520,6 +522,7 @@
     aspect-ratio: 16 / 9;
     /* Strict ratio for image framing */
     transform-style: preserve-3d;
+    margin: 0 auto;
 }
 
 .swipe-card-item {
@@ -560,8 +563,8 @@
     background: transparent;
     border: none;
     box-shadow: none;
-    backface-visibility: visible !important;
-    /* Override global hidden backface */
+    backface-visibility: hidden !important;
+    /* Changed from visible to hidden to fix mirroring */
     overflow: visible !important;
     /* Allow 3D elements to poke out */
 }
@@ -897,37 +900,91 @@
 
     .projects-grid {
         grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .projects-section .section-title {
+        font-size: 2.8rem;
+        margin-bottom: 2rem;
+    }
+
+    /* List View Mobile Optimizations */
+    .projects-list .project-card {
+        flex-direction: column;
+        height: auto;
+        padding: 0;
+        border-radius: 20px;
+    }
+
+    .projects-list .pc-preview {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .projects-list .pc-content {
+        width: 100%;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .projects-list .pc-desc {
+        display: block;
+        font-size: 0.9rem;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        display: -webkit-box;
+        overflow: hidden;
+    }
+
+    .projects-list .pc-bullets {
+        display: none;
     }
 
     /* Swipe View Mobile Optimizations */
     .swipe-wrapper {
-        padding: 0 0 60px;
+        padding: 20px 0 100px;
+        margin-top: 20px;
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: clip;
     }
 
     .swipe-card-container {
-        height: 520px;
+        height: 450px;
+        width: 100%;
+        aspect-ratio: auto;
+        /* Remove aspect-ratio to allow height override without width expansion */
+        max-width: 100%;
     }
 
     .swipe-card-item.prev {
-        transform: translateX(-35%) translateZ(-400px) rotateY(35deg) scale(0.7);
-        opacity: 0.1;
+        transform: translateX(-50%) translateZ(-500px) rotateY(45deg);
+        opacity: 0;
+        pointer-events: none;
     }
 
     .swipe-card-item.next {
-        transform: translateX(35%) translateZ(-400px) rotateY(-35deg) scale(0.7);
-        opacity: 0.1;
+        transform: translateX(50%) translateZ(-500px) rotateY(-45deg);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .swipe-card-item.active {
+        transform: translateZ(50px) rotateY(0) scale(1);
     }
 
     .view-swipe .pc-content {
-        padding: 30px;
+        padding: 30px 24px;
     }
 
     .view-swipe .pc-title {
-        font-size: 1.8rem;
+        font-size: 2rem;
     }
 
     .view-swipe .pc-desc {
-        font-size: 0.95rem;
+        font-size: 1rem;
         margin-bottom: 20px;
     }
 
@@ -944,17 +1001,47 @@
     }
 
     .swipe-nav {
-        bottom: -20px;
+        bottom: -30px;
         top: auto;
         transform: none;
+        width: 48px;
+        height: 48px;
     }
 
     .swipe-nav.prev {
-        left: calc(50% - 60px);
+        left: calc(50% - 70px);
     }
 
     .swipe-nav.next {
-        right: calc(50% - 60px);
+        right: calc(50% - 70px);
+    }
+
+    /* Click to flip support for mobile */
+    .view-swipe .project-card.is-flipped {
+        transform: rotateY(180deg) !important;
+    }
+
+    .view-swipe .project-card.is-flipped .preview-overlay {
+        opacity: 0;
+    }
+
+    .swipe-action-overlay {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        z-index: 30;
+        display: flex;
+        justify-content: center;
+        padding: 0 24px;
+        pointer-events: all;
+    }
+
+    .swipe-action-overlay .btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(124, 58, 237, 0.3);
     }
 }
 
