@@ -1,0 +1,291 @@
+/* ── Intro Loading Screen ── */
+.intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    /* No background here — background is on .intro-bg so it can fade independently */
+    pointer-events: none;
+}
+
+.intro-overlay.done {
+    display: none;
+}
+
+/* Separate bg layer — fades out while name is still animating */
+.intro-bg {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    z-index: -1;
+    transition: opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.intro-bg.fading {
+    opacity: 0;
+}
+
+/* Subtle ambient glow */
+.intro-glow {
+    position: absolute;
+    width: 600px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(124, 58, 237, 0.2) 0%, rgba(6, 182, 212, 0.08) 50%, transparent 80%);
+    filter: blur(40px);
+    pointer-events: none;
+    animation: intro-glow-pulse 2.5s ease-in-out infinite alternate;
+    transition: opacity 0.5s ease;
+}
+
+.intro-glow.fading {
+    opacity: 0;
+}
+
+@keyframes intro-glow-pulse {
+    0% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
+/* ── Name text ── */
+.intro-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(3rem, 12vw, 7rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    filter: drop-shadow(0 0 28px rgba(124, 58, 237, 0.35));
+    transform-origin: center center;
+    will-change: transform, opacity;
+    /* Transition set dynamically in JS */
+}
+
+/* ── Loading bar ── */
+.intro-bar-wrap {
+    width: clamp(200px, 40vw, 340px);
+    height: 5px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+}
+
+.intro-bar-wrap.fading {
+    opacity: 0;
+}
+
+.intro-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 0;
+    background: #ffffff;
+    box-shadow: none;
+    animation: intro-load 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes intro-load {
+    0% {
+        width: 0%;
+    }
+
+    80% {
+        width: 95%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+/* ── Small loading label ── */
+.intro-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(148, 163, 184, 0.5);
+    position: relative;
+    z-index: 2;
+    margin-top: -32px;
+    animation: intro-label-blink 1.2s ease-in-out infinite alternate;
+    transition: opacity 0.3s ease;
+}
+
+.intro-label.fading {
+    opacity: 0;
+}
+
+@keyframes intro-label-blink {
+    0% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* ════════════════════════════════════════════
+   INITIAL HIDDEN STATES
+   (elements are under the intro overlay — user never sees them)
+   ════════════════════════════════════════════ */
+
+/* Navbar hidden until intro done */
+.site-content .navbar {
+    opacity: 0;
+    transform: translateY(-16px);
+}
+
+/* Hero non-reveal elements hidden */
+.site-content .title-reveal-part,
+.site-content .hero-subtitle,
+.site-content .hero-actions {
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+/* Hero title itself is visible (for the name to stay) */
+.site-content .hero-title {
+    opacity: 1;
+}
+
+/* Skill spheres — just hide via opacity, float animation runs silently underneath */
+.site-content .skill-sphere {
+    opacity: 0;
+}
+
+/* visual-container (terminal card) — hide */
+.site-content .visual-container {
+    opacity: 0;
+    transform: translateY(22px);
+}
+
+/* ════════════════════════════════════════════
+   STAGGERED REVEAL ON intro-complete
+   ════════════════════════════════════════════ */
+
+/* 1 — Navbar slides down */
+.intro-complete .navbar {
+    animation: reveal-down 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0s;
+}
+
+/* 2 — Title Prefix "Hi, I'm" */
+.intro-complete .title-reveal-part.prefix {
+    animation: reveal-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.1s;
+}
+
+/* 3 — Title Suffix "Data Analyst..." */
+.intro-complete .title-reveal-part.suffix {
+    animation: reveal-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.25s;
+}
+
+/* 4 — Hero subtitle */
+.intro-complete .hero-subtitle {
+    animation: reveal-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.4s;
+}
+
+/* 5 — CTA buttons */
+.intro-complete .hero-actions {
+    animation: reveal-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.55s;
+}
+
+/* 6 — Visual container (terminal card) slides up */
+.intro-complete .visual-container {
+    animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.45s;
+}
+
+/* 7 — Skill spheres fade+blur in from behind visual-container then float
+   sphere-burst only touches opacity+filter so float-sph transform runs freely */
+.intro-complete .s1 {
+    animation: sphere-burst 0.55s ease-out 0.65s both,
+        float-sph 6s ease-in-out infinite;
+}
+
+.intro-complete .s2 {
+    animation: sphere-burst 0.55s ease-out 0.8s both,
+        float-sph 8s ease-in-out 1s infinite;
+}
+
+.intro-complete .s3 {
+    animation: sphere-burst 0.55s ease-out 0.72s both,
+        float-sph 7s ease-in-out 2s infinite;
+}
+
+.intro-complete .s4 {
+    animation: sphere-burst 0.55s ease-out 0.88s both,
+        float-sph 9s ease-in-out 3s infinite;
+}
+
+.intro-complete .s5 {
+    animation: sphere-burst 0.55s ease-out 0.76s both,
+        float-sph 10s ease-in-out 1.5s infinite;
+}
+
+/* ── Keyframes ── */
+@keyframes reveal-up {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes reveal-down {
+    from {
+        opacity: 0;
+        transform: translateY(-16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+@keyframes sphere-burst {
+    0% {
+        opacity: 0;
+        filter: blur(8px);
+    }
+
+    60% {
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 1;
+        filter: blur(0);
+    }
+}

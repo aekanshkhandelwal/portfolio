@@ -28,7 +28,7 @@ export default function Education() {
     return (
         <section className="section edu-section" id="education">
             <div className="container">
-                <div className="section-tag">Academic</div>
+
                 <h2 className="section-title">
                     Education &amp; <span className="gradient-text">Background</span>
                 </h2>

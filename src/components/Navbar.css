@@ -16,7 +16,7 @@
 }
 
 .navbar.hidden {
-    transform: translateY(-100%);
+    transform: translateY(-100%) !important;
 }
 
 .nav-inner {
@@ -92,41 +92,77 @@
     box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
 }
 
-/* ── Resume Button ── */
+/* ── New Resume Button Style ── */
 .nav-resume-btn {
-    display: inline-flex;
+    display: flex;
+    width: 140px;
+    /* Adjusted from 170px to fit navbar better */
+    height: 38px;
+    background-color: #1d2129;
+    border-radius: 40px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    justify-content: space-between;
     align-items: center;
-    gap: 6px;
-    padding: 8px 20px;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
     text-decoration: none;
-    color: #fff;
-    background: var(--accent);
-    border: 1px solid rgba(124, 58, 237, 0.5);
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35);
-    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-    white-space: nowrap;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    margin-left: auto;
 }
 
-.nav-resume-btn::before {
-    content: '↗';
-    font-size: 0.75rem;
-    opacity: 0.85;
-    transition: transform 0.3s ease;
+.nav-resume-btn .text {
+    width: calc(140px - 38px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.nav-resume-btn .icon-Container {
+    width: 38px;
+    height: 38px;
+    background-color: #f59aff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #1d2129;
+}
+
+.nav-resume-btn .icon-Container svg {
+    transition-duration: 1.5s;
 }
 
 .nav-resume-btn:hover {
-    background: #9f6ef7;
-    box-shadow: 0 6px 25px rgba(124, 58, 237, 0.6);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0px 8px 15px rgba(245, 154, 255, 0.2);
 }
 
-.nav-resume-btn:hover::before {
-    transform: translate(2px, -2px);
+.nav-resume-btn:hover .icon-Container svg {
+    animation: arrow-anim 1s linear infinite;
+}
+
+@keyframes arrow-anim {
+    0% {
+        opacity: 0;
+        margin-left: -10px;
+    }
+
+    50% {
+        opacity: 1;
+        margin-left: 0px;
+    }
+
+    100% {
+        opacity: 0;
+        margin-left: 10px;
+    }
 }
 
 /* ── Resume Hover Preview ── */

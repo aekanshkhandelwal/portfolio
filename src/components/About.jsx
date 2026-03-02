@@ -9,7 +9,7 @@ export default function About() {
             <div className="container">
                 <div className="about-grid">
                     <div className="about-text reveal">
-                        <div className="section-tag">About Me</div>
+
                         <div className="about-content-inner">
                             <h2 className="section-title">
                                 Passionate about <span className="gradient-text">Data &amp; Insights</span>

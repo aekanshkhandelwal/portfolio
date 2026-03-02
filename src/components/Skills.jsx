@@ -65,7 +65,7 @@ const Skills = () => {
 
             <div className="container">
                 <div className="section-header reveal">
-                    <div className="section-tag">Expertise</div>
+
                     <h2 className="section-title">
                         Technical <span className="gradient-text">Landscape</span>
                     </h2>

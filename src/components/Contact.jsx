@@ -62,7 +62,7 @@ export default function Contact() {
 
             <div className="container">
                 <div className="section-header reveal">
-                    <div className="section-tag">Network</div>
+
                     <h2 className="section-title">
                         Let's <span className="gradient-text text-glow">Connect</span>
                     </h2>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import useReveal from '../hooks/useReveal';
 import './Projects.css';
 
@@ -209,7 +210,9 @@ const projects = [
 ];
 
 export default function Projects() {
-    useReveal();
+    const [viewMode, setViewMode] = useState('grid'); // 'grid', 'list', 'swipe'
+    useReveal([viewMode]);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     const handleMouseMove = (e) => {
         const card = e.currentTarget;
@@ -221,126 +224,220 @@ export default function Projects() {
         card.style.setProperty('--mouse-y', `${y}px`);
     };
 
+    const nextProject = () => {
+        setCurrentIndex((prev) => (prev + 1) % projects.length);
+    };
+
+    const prevProject = () => {
+        setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
+    };
+
     return (
-        <section className="section projects-section" id="projects">
+        <section className={`section projects-section view-${viewMode}`} id="projects">
             <div className="container">
                 <div className="section-header reveal">
-                    <div className="section-tag">Projects</div>
-                    <h2 className="section-title">
-                        Featured <span className="gradient-text">Projects</span>
-                    </h2>
+                    <div className="header-content">
+                        <h2 className="section-title">
+                            Featured <span className="gradient-text">Projects</span>
+                        </h2>
+                        <div className="view-switcher">
+                            <button
+                                className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                                onClick={() => setViewMode('grid')}
+                                aria-label="Grid View"
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+                                    <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+                                </svg>
+                            </button>
+                            <button
+                                className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                                onClick={() => setViewMode('list')}
+                                aria-label="List View"
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
+                                    <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+                                </svg>
+                            </button>
+                            <button
+                                className={`view-btn ${viewMode === 'swipe' ? 'active' : ''}`}
+                                onClick={() => setViewMode('swipe')}
+                                aria-label="Swipe View"
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <path d="M7 12h10M7 8h10M7 16h10" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="projects-grid spotlight-parent">
-                    {projects.map((project, idx) => {
-                        const CardContent = (
-                            <div
-                                className={`project-card ${project.accent}`}
-                            >
-                                <div className="card-glow"></div>
-                                <div className="pc-preview">
-                                    <div className="preview-overlay">
-                                        <span className="preview-text">View Project <span>↗</span></span>
-                                    </div>
-                                    <div className="preview-visual">
-                                        {project.image ? (
-                                            <img src={project.image} alt={project.title} className="pc-image" />
-                                        ) : project.title.includes('CTGAN') ? (
-                                            <div className="gan-visual">
-                                                <div className="gan-nodes">
-                                                    <div className="gan-node generator">
-                                                        <span className="gan-node-label">Gen</span>
-                                                    </div>
+                <div className={`projects-container ${viewMode}-view spotlight-parent`}>
+                    {viewMode === 'swipe' ? (
+                        <div className="swipe-wrapper">
+                            <button className="swipe-nav prev" onClick={prevProject} aria-label="Previous Project">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                            </button>
 
-                                                    <div className="gan-connector">
-                                                        <div className="gan-arrow">
-                                                            <svg viewBox="0 0 100 20" fill="none">
-                                                                <path d="M0 10 H90" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="path-line" />
-                                                                <path d="M85 5 L95 10 L85 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="path-head" />
-                                                            </svg>
-                                                        </div>
-                                                        <div className="flow-particle"></div>
-                                                    </div>
-
-                                                    <div className="gan-node discriminator">
-                                                        <span className="gan-node-label">Disc</span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="gan-particles">
-                                                    {[...Array(6)].map((_, i) => (
-                                                        <div
-                                                            key={i}
-                                                            className="gan-particle"
-                                                            style={{
-                                                                left: `${Math.random() * 100}%`,
-                                                                top: `${Math.random() * 100}%`,
-                                                                animationDelay: `${Math.random() * 5}s`
-                                                            }}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            /* Fallback to CSS-based visual if image generation fails */
-                                            <div className={`visual-mockup ${project.accent}`}>
-                                                <div className="mock-chart"></div>
-                                                <div className="mock-lines"></div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="pc-content">
-                                    <div className="pc-header">
-                                        <div className="pc-tags">
-                                            {project.tags.map((tag) => (
-                                                <span className="pc-tag" key={tag}>{tag}</span>
-                                            ))}
+                            <div className="swipe-card-container">
+                                {projects.map((project, idx) => (
+                                    <div
+                                        className={`swipe-card-item ${idx === currentIndex ? 'active' : ''} ${idx < currentIndex ? 'prev' : ''} ${idx > currentIndex ? 'next' : ''}`}
+                                        key={idx}
+                                        onMouseMove={handleMouseMove}
+                                    >
+                                        <div className="reveal visible">
+                                            {project.link ? (
+                                                <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-card-wrapper">
+                                                    <ProjectCard project={project} />
+                                                </a>
+                                            ) : (
+                                                <ProjectCard project={project} />
+                                            )}
                                         </div>
                                     </div>
-                                    <h3 className="pc-title">{project.title}</h3>
-                                    <p className="pc-desc">{project.desc}</p>
+                                ))}
+                            </div>
 
-                                    <ul className="pc-bullets">
-                                        {project.bullets.map((bullet, bIdx) => (
-                                            <li key={bIdx}>{bullet}</li>
-                                        ))}
-                                    </ul>
+                            <button className="swipe-nav next" onClick={nextProject} aria-label="Next Project">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
 
-                                    <div className="pc-footer">
-                                        {project.metrics && (
-                                            <div className="pc-metrics">
-                                                {project.metrics.map((metric, mIdx) => (
-                                                    <div className="pcm" key={mIdx}>
-                                                        <span className="pcm-val">{metric.val}</span>
-                                                        <span className="pcm-label">{metric.label}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
+                            <div className="swipe-dots">
+                                {projects.map((_, idx) => (
+                                    <span
+                                        key={idx}
+                                        className={`swipe-dot ${idx === currentIndex ? 'active' : ''}`}
+                                        onClick={() => setCurrentIndex(idx)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={viewMode === 'grid' ? 'projects-grid' : 'projects-list'}>
+                            {projects.map((project, idx) => (
+                                <div
+                                    className="reveal"
+                                    key={idx}
+                                    onMouseMove={handleMouseMove}
+                                >
+                                    {project.link ? (
+                                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-card-wrapper">
+                                            <ProjectCard project={project} />
+                                        </a>
+                                    ) : (
+                                        <ProjectCard project={project} />
+                                    )}
                                 </div>
-                            </div>
-                        );
-
-                        return (
-                            <div
-                                className="reveal"
-                                key={idx}
-                                onMouseMove={handleMouseMove}
-                            >
-                                {project.link ? (
-                                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-card-wrapper">
-                                        {CardContent}
-                                    </a>
-                                ) : (
-                                    CardContent
-                                )}
-                            </div>
-                        );
-                    })}
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
+    );
+}
+
+// Sub-component for the card content to keep Projects.jsx clean
+function ProjectCard({ project }) {
+    return (
+        <div className={`project-card ${project.accent}`}>
+            <div className="card-glow"></div>
+            <div className="pc-preview">
+                <div className="preview-overlay">
+                    <span className="preview-text">View Project <span>↗</span></span>
+                </div>
+                <div className="preview-visual">
+                    {project.image ? (
+                        <img src={project.image} alt={project.title} className="pc-image" />
+                    ) : ['Movie Recommender', 'Social Media', 'Library Management'].some(keyword => project.title.includes(keyword)) ? (
+                        <div className={`text-visual ${project.accent}`}>
+                            <div className="text-visual-content">
+                                {project.title.split(' ').map((word, i) => (
+                                    <span key={i} className="visual-word" style={{ animationDelay: `${i * 0.1}s` }}>
+                                        {word}
+                                    </span>
+                                ))}
+                            </div>
+                            <div className="text-visual-bg"></div>
+                        </div>
+                    ) : project.title.includes('CTGAN') ? (
+                        <div className="gan-visual">
+                            <div className="gan-nodes">
+                                <div className="gan-node generator">
+                                    <span className="gan-node-label">Gen</span>
+                                </div>
+
+                                <div className="gan-connector">
+                                    <div className="gan-arrow">
+                                        <svg viewBox="0 0 100 20" fill="none">
+                                            <path d="M0 10 H90" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="path-line" />
+                                            <path d="M85 5 L95 10 L85 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="path-head" />
+                                        </svg>
+                                    </div>
+                                    <div className="flow-particle"></div>
+                                </div>
+
+                                <div className="gan-node discriminator">
+                                    <span className="gan-node-label">Disc</span>
+                                </div>
+                            </div>
+
+                            <div className="gan-particles">
+                                {[...Array(6)].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="gan-particle"
+                                        style={{
+                                            left: `${Math.random() * 100}%`,
+                                            top: `${Math.random() * 100}%`,
+                                            animationDelay: `${Math.random() * 5}s`
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={`visual-mockup ${project.accent}`}>
+                            <div className="mock-chart"></div>
+                            <div className="mock-lines"></div>
+                        </div>
+                    )}
+                </div>
+            </div>
+            <div className="pc-content">
+                <div className="pc-header">
+                    <div className="pc-tags">
+                        {project.tags.map((tag) => (
+                            <span className="pc-tag" key={tag}>{tag}</span>
+                        ))}
+                    </div>
+                </div>
+                <h3 className="pc-title">{project.title}</h3>
+                <p className="pc-desc">{project.desc}</p>
+
+                <ul className="pc-bullets">
+                    {project.bullets.map((bullet, bIdx) => (
+                        <li key={bIdx}>{bullet}</li>
+                    ))}
+                </ul>
+
+                <div className="pc-footer">
+                    {project.metrics && (
+                        <div className="pc-metrics">
+                            {project.metrics.map((metric, mIdx) => (
+                                <div className="pcm" key={mIdx}>
+                                    <span className="pcm-val">{metric.val}</span>
+                                    <span className="pcm-label">{metric.label}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
     );
 }

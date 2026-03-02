@@ -109,7 +109,7 @@ export default function Certifications() {
     return (
         <section className="section certs-section" id="certifications">
             <div className="container">
-                <div className="section-tag">Credentials</div>
+
                 <h2 className="section-title">
                     Certifications &amp; <span className="gradient-text">Learning</span>
                 </h2>
