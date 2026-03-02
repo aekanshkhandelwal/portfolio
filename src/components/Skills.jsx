@@ -80,7 +80,7 @@ const Skills = () => {
                         {skillGroups.map((group, qIdx) => (
                             <div className={`skill-quadrant q-${qIdx + 1}`} key={qIdx}>
                                 <div className="quadrant-info">
-                                    <span className="q-icon">{group.icon}</span>
+                                    <span className="q-icon" aria-hidden="true">{group.icon}</span>
                                     <h3 className="q-title">{group.title}</h3>
                                 </div>
                                 <div className="bubble-arena">
@@ -97,7 +97,7 @@ const Skills = () => {
                                                 '--reveal-delay': `${sIdx * 0.22}s`
                                             }}
                                         >
-                                            <span className="b-icon">{skill.icon}</span>
+                                            <span className="b-icon" aria-hidden="true">{skill.icon}</span>
                                             <span className="b-name">{skill.name}</span>
                                         </div>
                                     ))}

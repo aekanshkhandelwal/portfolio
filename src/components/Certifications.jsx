@@ -121,14 +121,14 @@ export default function Certifications() {
                             : {};
 
                         return (
-                            <div className={`cert-card-container reveal ${cert.credentialLink ? 'clickable' : ''}`} key={idx}>
+                            <article className={`cert-card-container reveal ${cert.credentialLink ? 'clickable' : ''}`} key={idx}>
                                 <CardWrapper className="cert-card-inner" {...wrapperProps}>
                                     {/* Front Side */}
                                     <div className="cert-front">
                                         <div className="cert-main">
                                             <div className={`cert-logo ${cert.class}`}>
                                                 {cert.logo ? (
-                                                    <img src={cert.logo} alt={cert.issuer} className="cert-logo-img" />
+                                                    <img src={cert.logo} alt={cert.issuer} className="cert-logo-img" loading="lazy" />
                                                 ) : (
                                                     <span>{cert.icon}</span>
                                                 )}
@@ -156,9 +156,9 @@ export default function Certifications() {
                                     <div className="cert-back">
                                         <div className="cert-preview-wrap">
                                             {/* Blurred background preview */}
-                                            <img src={cert.previewImage} alt="" className="cert-preview-bg" />
+                                            <img src={cert.previewImage} alt="" className="cert-preview-bg" loading="lazy" />
                                             {/* Sharp contained preview */}
-                                            <img src={cert.previewImage} alt={`${cert.title} Preview`} className="cert-preview-img" />
+                                            <img src={cert.previewImage} alt={`${cert.title} Preview`} className="cert-preview-img" loading="lazy" />
 
                                             <div className="cert-preview-overlay">
                                                 {cert.credentialLink && (
@@ -175,7 +175,7 @@ export default function Certifications() {
                                         </div>
                                     </div>
                                 </CardWrapper>
-                            </div>
+                            </article>
                         );
                     })}
                 </div>

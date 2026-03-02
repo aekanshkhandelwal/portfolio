@@ -76,16 +76,16 @@ export default function Contact() {
                         <h3>Direct Transmission</h3>
                         <form ref={form} className="contact-form-inner" onSubmit={handleSubmit}>
                             <div className="form-group">
-                                <label>Identity</label>
-                                <input type="text" name="from_name" placeholder="Your name" required />
+                                <label htmlFor="from_name">Identity</label>
+                                <input id="from_name" type="text" name="from_name" placeholder="Your name" required />
                             </div>
                             <div className="form-group">
-                                <label>Channel</label>
-                                <input type="email" name="from_email" placeholder="email@example.com" required />
+                                <label htmlFor="from_email">Channel</label>
+                                <input id="from_email" type="email" name="from_email" placeholder="email@example.com" required />
                             </div>
                             <div className="form-group">
-                                <label>Signal Content</label>
-                                <textarea name="description" rows="4" placeholder="Briefly describe your request..." required></textarea>
+                                <label htmlFor="description">Signal Content</label>
+                                <textarea id="description" name="description" rows="4" placeholder="Briefly describe your request..." required></textarea>
                             </div>
                             <button type="submit" className="btn btn-primary magnetic-btn" disabled={status === 'sending'}>
                                 {status === 'sending' ? 'Sending...' : 'Initialize Connection →'}

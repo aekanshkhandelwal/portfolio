@@ -8,8 +8,8 @@ export default function Footer() {
                     <div className="footer-brand">
                         <span className="nav-logo">AK<span className="dot">.</span></span>
                         <p className="footer-tagline">
-                            Data Analyst & BI Developer<br />
-                            Transforming complex data into visual stories.
+                            Agentic AI Specialist &amp; Data Analyst<br />
+                            Building autonomous systems &amp; intelligent solutions.
                         </p>
                     </div>
                     <div className="footer-right">
@@ -25,7 +25,6 @@ export default function Footer() {
                             {[
                                 { name: 'LinkedIn', href: 'https://www.linkedin.com/in/aekansh-khandelwal-780029231/' },
                                 { name: 'GitHub', href: 'https://github.com/aekanshkhandelwal' },
-                                { name: 'Twitter', href: '#' },
                             ].map((social) => (
                                 <a href={social.href} key={social.name} className="social-pill" target="_blank" rel="noreferrer">
                                     {social.name}
@@ -36,7 +35,7 @@ export default function Footer() {
                 </div>
                 <div className="footer-bottom">
                     <div className="footer-credits">
-                        Built with React, CSS3 & Ambient Mist
+                        Built with React, CSS3 &amp; Ambient Mist
                     </div>
                     <p className="copyright">&copy; {new Date().getFullYear()} Aekansh Khandelwal</p>
                 </div>

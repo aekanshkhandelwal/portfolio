@@ -339,6 +339,7 @@ export default function Projects() {
                                     className="reveal"
                                     key={idx}
                                     onMouseMove={handleMouseMove}
+                                    onMouseEnter={(e) => e.currentTarget.classList.add('visible')}
                                 >
                                     {project.link ? (
                                         <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-card-wrapper">
@@ -367,7 +368,7 @@ export default function Projects() {
 // Sub-component for the card content to keep Projects.jsx clean
 function ProjectCard({ project, isFlipped }) {
     return (
-        <div className={`project-card ${project.accent} ${isFlipped ? 'is-flipped' : ''}`}>
+        <article className={`project-card ${project.accent} ${isFlipped ? 'is-flipped' : ''}`}>
             <div className="card-glow"></div>
             <div className="pc-preview">
                 <div className="preview-overlay">
@@ -375,7 +376,7 @@ function ProjectCard({ project, isFlipped }) {
                 </div>
                 <div className="preview-visual">
                     {project.image ? (
-                        <img src={project.image} alt={project.title} className="pc-image" />
+                        <img src={project.image} alt={project.title} className="pc-image" loading="lazy" />
                     ) : ['Movie Recommender', 'Social Media', 'Library Management'].some(keyword => project.title.includes(keyword)) ? (
                         <div className={`text-visual ${project.accent}`}>
                             <div className="text-visual-content">
@@ -461,6 +462,6 @@ function ProjectCard({ project, isFlipped }) {
                     )}
                 </div>
             </div>
-        </div>
+        </article>
     );
 }

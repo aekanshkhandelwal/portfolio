@@ -116,7 +116,7 @@ export default function Navbar() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <img src="/resume.png" alt="Resume Preview" />
+                                <img src="/resume.png" alt="Resume Preview" loading="lazy" />
                             </a>
                         </div>
                     </div>

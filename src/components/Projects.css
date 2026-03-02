@@ -71,8 +71,10 @@
 }
 
 .projects-grid.spotlight-parent:has(.reveal:hover) .reveal:not(:hover) .project-card {
-    opacity: 0.2;
+    opacity: 0.1;
+    /* Dim more for better focus */
     transform: scale(0.96);
+    filter: blur(2px);
 }
 
 .reveal {
@@ -563,10 +565,9 @@
     background: transparent;
     border: none;
     box-shadow: none;
-    backface-visibility: hidden !important;
-    /* Changed from visible to hidden to fix mirroring */
+    backface-visibility: visible !important;
+    /* Must be visible for flip to work, children handle backface-hidden */
     overflow: visible !important;
-    /* Allow 3D elements to poke out */
 }
 
 /* Override global reveal hover to avoid transform conflicts in swipe view */
@@ -960,14 +961,16 @@
     }
 
     .swipe-card-item.prev {
-        transform: translateX(-50%) translateZ(-500px) rotateY(45deg);
+        transform: translateX(-40%) translateZ(-300px) rotateY(35deg) scale(0.7);
         opacity: 0;
+        /* Hide side cards on mobile to prevent overflow */
         pointer-events: none;
     }
 
     .swipe-card-item.next {
-        transform: translateX(50%) translateZ(-500px) rotateY(-45deg);
+        transform: translateX(40%) translateZ(-300px) rotateY(-35deg) scale(0.7);
         opacity: 0;
+        /* Hide side cards on mobile to prevent overflow */
         pointer-events: none;
     }
 
