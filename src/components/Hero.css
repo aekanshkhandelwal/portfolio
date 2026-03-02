@@ -167,14 +167,11 @@
     position: relative;
     font-family: inherit;
     font-weight: 600;
-    font-size: 12px;
-    /* Smaller font */
+    font-size: 11px;
     letter-spacing: 0.03em;
     border-radius: 50px;
-    /* Bubble/Pill shape */
     cursor: pointer;
     border: 1.5px solid #7c3aed;
-    /* Colored border */
     background: linear-gradient(to right, #7c3aed, #4a00e0);
     color: ghostwhite;
     overflow: hidden;
@@ -182,7 +179,6 @@
     display: inline-flex;
     transition: all 0.2s cubic-bezier(0.3, 1, 0.8, 1);
     flex-shrink: 0;
-    /* Bubble-like glow */
     box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
 }
 
@@ -519,22 +515,22 @@
 
     .hero-actions {
         justify-content: center;
-        gap: 8px;
+        gap: 6px;
     }
 
     .hero-actions .btn {
-        padding: 8px 16px;
-        font-size: 0.8rem;
+        padding: 6px 12px;
+        font-size: 0.75rem;
     }
 }
 
 @media (max-width: 480px) {
     .hero-actions {
-        gap: 8px;
+        gap: 5px;
     }
 
     .hero-actions .btn {
-        padding: 9px 16px;
-        font-size: 0.78rem;
+        padding: 6px 10px;
+        font-size: 0.72rem;
     }
 }
