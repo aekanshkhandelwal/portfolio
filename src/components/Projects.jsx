@@ -8,7 +8,8 @@ const projects = [
         tags: ['React', 'Gemini API', 'Pinecone', 'Node.js', 'Markdown'],
         accent: 'accent-teal',
         link: 'https://aekansh-ragbot.vercel.app/',
-        image: '/previews/ragbot.gif',
+        image: '/previews/ragbot.mp4',
+        poster: '/previews/ragbot.gif',
         desc: 'A beautiful, interactive Retrieval-Augmented Generation (RAG) chatbot application.',
         bullets: [
             'Retrieval-Augmented Generation using Google Gemini API and Pinecone Vector Database for context-aware responses.',
@@ -27,7 +28,8 @@ const projects = [
         tags: ['Node.js', 'MongoDB', 'React', 'JWT', 'OAuth'],
         accent: 'accent-blue',
         link: 'https://linear-silk.vercel.app/',
-        image: '/previews/linear.gif',
+        image: '/previews/linear.mp4',
+        poster: '/previews/linear.gif',
         desc: 'A full-stack project management tool inspired by Linear, designed to help individuals and teams efficiently track issues, manage projects, and organize workspaces.',
         bullets: [
             'Built a complete issue and project management system with team-based workflows.',
@@ -45,7 +47,8 @@ const projects = [
         tags: ['React', 'Gmail API', 'Groq LLM', 'OAuth'],
         accent: 'accent-purple',
         link: 'https://sendwise-ten.vercel.app/',
-        image: '/previews/sendwise.gif',
+        image: '/previews/sendwise.mp4',
+        poster: '/previews/sendwise.gif',
         desc: 'An AI-powered email command centre that transforms traditional inbox management into an intelligent, conversational workflow.',
         bullets: [
             'Built an agentic, client-first architecture integrating Groq LLMs with the Gmail API.',
@@ -63,7 +66,8 @@ const projects = [
         tags: ['Power BI', 'SQL', 'Data Analytics'],
         accent: 'accent-blue',
         link: 'https://app.powerbi.com/view?r=eyJrIjoiMzdlMTEzMWMtMTFmYi00MWI3LTk3ZjEtM2E0YjkzZTk5NTc0IiwidCI6IjM0YmQ4YmVkLTJhYzEtNDFhZS05ZjA4LTRlMGEzZjExNzA2YyJ9',
-        image: '/previews/retail.gif',
+        image: '/previews/retail.mp4',
+        poster: '/previews/retail.gif',
         desc: 'Designed a dashboard to analyze sales, inventory, and customer insights for retail chains using Power BI and SQL.',
         bullets: [
             'Analyzed 15,000+ retail transactions across 5+ cities.',
@@ -98,7 +102,8 @@ const projects = [
         tags: ['Python', 'Streamlit', 'Pandas', 'Data Cleaning'],
         accent: 'accent-purple',
         link: 'https://datacleaningapp-by-aekansh.streamlit.app/',
-        image: '/previews/datacleaning.gif',
+        image: '/previews/datacleaning.mp4',
+        poster: '/previews/datacleaning.gif',
         desc: 'A powerful web-based utility designed to automate data preprocessing, enabling users to clean, transform, and analyze datasets without writing a single line of code.',
         bullets: [
             'Built a responsive web app using Streamlit and Pandas for real-time data manipulation.',
@@ -116,7 +121,8 @@ const projects = [
         tags: ['SQL', 'Data Analysis', 'Netflix'],
         accent: 'accent-purple',
         link: 'https://github.com/aekanshkhandelwal/Netflix_Movie_Show_Analysis_Using_SQL',
-        image: '/previews/Netflix.gif',
+        image: '/previews/Netflix.mp4',
+        poster: '/previews/Netflix.gif',
         desc: 'Developed an analytics system for streaming platforms to track user engagement, ratings, and content popularity.',
         bullets: [
             'Revealed user engagement trends and genre preferences using 15+ optimized SQL queries.',
@@ -376,7 +382,20 @@ function ProjectCard({ project, isFlipped }) {
                 </div>
                 <div className="preview-visual">
                     {project.image ? (
-                        <img src={project.image} alt={project.title} className="pc-image" loading="lazy" />
+                        project.image.endsWith('.mp4') ? (
+                            <video
+                                src={project.image}
+                                poster={project.poster}
+                                className="pc-image"
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                aria-label={project.title}
+                            />
+                        ) : (
+                            <img src={project.image} alt={project.title} className="pc-image" loading="lazy" />
+                        )
                     ) : ['Movie Recommender', 'Social Media', 'Library Management'].some(keyword => project.title.includes(keyword)) ? (
                         <div className={`text-visual ${project.accent}`}>
                             <div className="text-visual-content">
