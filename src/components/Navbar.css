@@ -2,22 +2,19 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    z-index: 999;
-    padding: 30px 0;
+    width: 100%;
+    z-index: 9999;
+    padding: clamp(1rem, 3vh, 2rem) 0;
     display: flex;
     justify-content: center;
     pointer-events: none;
-    transition: padding 0.6s cubic-bezier(0.19, 1, 0.22, 1), transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.navbar.scrolled {
-    padding: 20px 0;
+    transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .navbar.hidden {
     transform: translateY(-100%) !important;
 }
+
 
 .nav-inner {
     max-width: 1200px;
@@ -55,6 +52,11 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    transition: transform 0.3s ease;
+}
+
+.nav-logo:hover {
+    transform: scale(1.05);
 }
 
 .nav-logo .dot {
@@ -297,7 +299,8 @@
 @media (max-width: 1024px) {
     .nav-inner {
         padding-left: 16px;
-        gap: 12px;
+        padding-right: 8px;
+        gap: 16px;
     }
 }
 
@@ -327,6 +330,7 @@
     .nav-logo {
         display: flex;
         margin-right: 0;
+        font-size: 1.1rem;
     }
 
     .menu-toggle {
@@ -345,7 +349,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 30px;
+        gap: 24px;
         pointer-events: none;
         opacity: 0;
         visibility: hidden;

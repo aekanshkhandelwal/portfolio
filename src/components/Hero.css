@@ -17,11 +17,10 @@
 }
 
 .hero {
-    min-height: 95vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    padding: 180px 0 100px;
-    /* Increased top padding */
+    padding: clamp(8rem, 20vh, 12rem) 0 clamp(4rem, 10vh, 8rem);
     position: relative;
     overflow: hidden;
 }
@@ -108,7 +107,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 60px;
+    gap: clamp(2rem, 6vw, 5rem);
     position: relative;
     z-index: 1;
 }
@@ -145,7 +144,7 @@
 }
 
 .hero-subtitle {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: var(--text-muted);
     margin-bottom: 32px;
     /* Reduced margin for tighter look */
@@ -156,78 +155,256 @@
 .hero-actions {
     display: flex;
     flex-wrap: nowrap;
-    gap: 8px;
-    margin-top: 6px;
-    overflow-x: auto;
-    padding-bottom: 4px;
+    gap: 16px;
+    margin-top: 40px;
+    padding: 10px 4px;
+    position: relative;
+    width: fit-content;
+    overflow: visible;
 }
 
-/* ── Gloss/Skew-Reveal Styling for Hero Buttons ── */
+.hero-actions::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    height: 100px;
+    background: radial-gradient(circle at center, rgba(124, 58, 237, 0.1), transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.hero-actions::-webkit-scrollbar {
+    display: none;
+}
+
 .hero-actions .cssbuttons-io {
     position: relative;
     font-family: inherit;
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.03em;
-    border-radius: 50px;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border-radius: 12px;
     cursor: pointer;
-    border: 1.5px solid #7c3aed;
-    background: linear-gradient(to right, #7c3aed, #4a00e0);
-    color: ghostwhite;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #fff;
     overflow: hidden;
     text-decoration: none;
     display: inline-flex;
-    transition: all 0.2s cubic-bezier(0.3, 1, 0.8, 1);
+    align-items: center;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     flex-shrink: 0;
-    box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+    padding: 1.5px;
+}
+
+/* Main Animated Border Light (Laser) */
+.hero-actions .cssbuttons-io::after {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    background: conic-gradient(from var(--angle),
+            transparent 0%,
+            transparent 70%,
+            var(--accent) 80%,
+            var(--accent-2) 90%,
+            transparent 100%);
+    border-radius: inherit;
+    animation: borderRotate 3s linear infinite;
+    z-index: 0;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 8px var(--accent-2));
+    pointer-events: none;
+}
+
+/* Secondary Animated Border Light (Soft Bloom) */
+.hero-actions .cssbuttons-io::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: conic-gradient(from var(--angle),
+            transparent 0%,
+            transparent 65%,
+            var(--accent) 80%,
+            var(--accent-2) 95%,
+            transparent 100%);
+    border-radius: inherit;
+    animation: borderRotate 3s linear infinite;
+    z-index: -1;
+    filter: blur(12px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.hero-actions .cssbuttons-io:hover::before {
+    opacity: 0.6;
 }
 
 .hero-actions .cssbuttons-io svg {
-    width: 1.1em;
-    height: 1.1em;
-    margin-right: 0.4em;
+    width: 1.25em;
+    height: 1.25em;
+    margin-right: 0.6em;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hero-actions .cssbuttons-io:hover svg {
+    transform: scale(1.2) rotate(-5deg);
+    color: var(--accent-2);
 }
 
 .hero-actions .cssbuttons-io span {
     position: relative;
     z-index: 10;
-    transition: color 0.4s;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     display: inline-flex;
     align-items: center;
-    padding: 0.28em 0.8em;
+    padding: 0.8rem 1.85rem;
+    background: rgba(5, 8, 18, 0.5); /* Base glass layer */
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
 }
 
-.hero-actions .cssbuttons-io::before {
-    content: "";
+/* Individual Button Colors (Persistent) */
+.hero-actions .cssbuttons-io:nth-child(1) span {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(5, 8, 18, 0.8));
+}
+
+.hero-actions .cssbuttons-io:nth-child(2) span {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(5, 8, 18, 0.8));
+}
+
+.hero-actions .cssbuttons-io:nth-child(3) span {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.3), rgba(5, 8, 18, 0.8));
+}
+
+.hero-actions .cssbuttons-io:hover span {
+    background: rgba(5, 8, 18, 0.2); /* Deepen on hover to let gradient show more */
+}
+
+/* Liquid Gradient Fill Effect */
+.hero-actions .cssbuttons-io span::after {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 120%;
-    height: 100%;
-    z-index: 0;
-    background: #000;
-    left: -10%;
-    transform: skew(30deg);
-    transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: -1;
+    mix-blend-mode: soft-light;
+}
+
+.hero-actions .cssbuttons-io:hover span::after {
+    opacity: 0.9; /* More intense on hover */
+}
+
+/* Static glass-etched border */
+.hero-actions .cssbuttons-io {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.05);
+}
+
+.hero-actions .cssbuttons-io:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-8px) scale(1.05);
+    border-color: rgba(124, 58, 237, 0.8);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(124, 58, 237, 0.3);
+}
+
+.hero-actions .cssbuttons-io:hover span {
+    background: rgba(5, 8, 18, 0.1);
 }
 
 .hero-actions .cssbuttons-io:hover::before {
-    transform: translate3d(100%, 0, 0);
+    width: 300%;
+    height: 600%;
 }
 
-.hero-actions .cssbuttons-io:active {
-    transform: scale(0.95);
+.hero-actions .cssbuttons-io:nth-child(2)::before {
+    background: conic-gradient(from var(--angle),
+            transparent 0%,
+            transparent 65%,
+            var(--accent-2) 80%,
+            #fff 95%,
+            transparent 100%);
 }
 
-/* Variant for Chat with AI button to use Cyan gradient and border */
-.hero-actions .cssbuttons-io:nth-child(2) {
-    background: linear-gradient(to right, #06b6d4, #0891b2);
-    border-color: #06b6d4;
+.hero-actions .cssbuttons-io:nth-child(2)::after {
+    background: conic-gradient(from var(--angle),
+            transparent 0%,
+            transparent 70%,
+            var(--accent-2) 80%,
+            #fff 90%,
+            transparent 100%);
+    filter: drop-shadow(0 0 3px var(--accent-2)) drop-shadow(0 0 8px #fff);
 }
 
-/* Variant for Contact button border */
-.hero-actions .cssbuttons-io:nth-child(3) {
-    border-color: #7c3aed;
+.hero-actions .cssbuttons-io:nth-child(2):hover {
+    border-color: rgba(6, 182, 212, 0.8);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(6, 182, 212, 0.3);
+}
+
+/* Specific Styles for "Get In Touch" (Third Button) */
+.hero-actions .cssbuttons-io:nth-child(3)::before {
+    background: conic-gradient(from var(--angle),
+            transparent 0%,
+            transparent 65%,
+            #1e40af 80%,
+            #3b82f6 95%,
+            transparent 100%);
+}
+
+.hero-actions .cssbuttons-io:nth-child(3)::after {
+    background: conic-gradient(from var(--angle),
+            transparent 0%,
+            transparent 70%,
+            #1e40af 80%,
+            #3b82f6 90%,
+            transparent 100%);
+    filter: drop-shadow(0 0 3px #1e40af) drop-shadow(0 0 8px #3b82f6);
+}
+
+.hero-actions .cssbuttons-io:nth-child(3):hover {
+    border-color: rgba(59, 130, 246, 0.8);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+/* Responsive Scaling for Buttons */
+@media (max-width: 1024px) {
+    .hero-actions .cssbuttons-io {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero-actions .cssbuttons-io {
+        font-size: 13px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-actions .cssbuttons-io span {
+        justify-content: center;
+        width: 100%;
+    }
 }
 
 
@@ -297,10 +474,10 @@
     border-radius: 24px;
     padding: 2px;
     background: conic-gradient(from var(--angle),
-            rgba(168, 239, 255, 0.1),
-            rgba(168, 239, 255, 1) 0.1turn,
-            rgba(168, 239, 255, 1) 0.15turn,
-            rgba(168, 239, 255, 0.1) 0.25turn);
+            rgba(168, 85, 247, 0.1),
+            rgba(168, 85, 247, 1) 0.1turn,
+            rgba(168, 85, 247, 1) 0.15turn,
+            rgba(168, 85, 247, 0.1) 0.25turn);
     -webkit-mask:
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
@@ -338,8 +515,8 @@
     position: absolute;
     inset: 0;
     background: radial-gradient(circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-            rgba(124, 58, 237, 0.12),
-            transparent 80%);
+            rgba(168, 85, 247, 0.2),
+            transparent 85%);
     pointer-events: none;
     z-index: 0;
     opacity: 0;
@@ -393,7 +570,7 @@
     padding: 32px;
 }
 
-.code-line {
+.hero .code-line {
     font-family: var(--mono);
     font-size: 0.85rem;
     color: #cbd5e1;
@@ -515,12 +692,16 @@
 
     .hero-actions {
         justify-content: center;
-        gap: 6px;
+        gap: 8px;
+        flex-wrap: nowrap;
+        overflow-x: visible;
+        width: 100%;
     }
 
     .hero-actions .btn {
-        padding: 6px 12px;
-        font-size: 0.75rem;
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        flex-shrink: 1;
     }
 }
 

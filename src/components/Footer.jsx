@@ -6,7 +6,7 @@ export default function Footer() {
             <div className="container">
                 <div className="footer-inner">
                     <div className="footer-brand">
-                        <span className="nav-logo">AK<span className="dot">.</span></span>
+                        <span className="nav-logo">AK</span>
                         <p className="footer-tagline">
                             Agentic AI Specialist &amp; Data Analyst<br />
                             Building autonomous systems &amp; intelligent solutions.

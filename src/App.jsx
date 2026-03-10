@@ -36,25 +36,27 @@ function App() {
           intro-complete class triggers staggered CSS animations on hero elements. */}
       <div className={`site-content${introComplete ? ' intro-complete' : ''}`}>
         <AmbientBackground />
-        <Navbar />
-        <main>
-          {/* Hero loads immediately — it is above the fold */}
-          <Hero />
+        <div className="page">
+          <Navbar />
+          <main>
+            {/* Hero loads immediately — it is above the fold */}
+            <Hero />
 
-          {/* Everything else is lazy-loaded; Suspense shows nothing while loading */}
+            {/* Everything else is lazy-loaded; Suspense shows nothing while loading */}
+            <Suspense fallback={null}>
+              <About />
+              <Skills />
+              <Projects />
+              <Certifications />
+              <Education />
+              <Contact />
+            </Suspense>
+          </main>
+
           <Suspense fallback={null}>
-            <About />
-            <Skills />
-            <Projects />
-            <Certifications />
-            <Education />
-            <Contact />
+            <Footer />
           </Suspense>
-        </main>
-
-        <Suspense fallback={null}>
-          <Footer />
-        </Suspense>
+        </div>
 
         <a
           href="https://aekansh-ragbot.vercel.app/"

@@ -1,154 +1,289 @@
+/* ══════════════════════════════════════════════════════════
+   EDUCATION SECTION — Editorial Design
+══════════════════════════════════════════════════════════ */
+
 .edu-section {
+    padding: 8rem 0;
     background: transparent;
+    position: relative;
+    z-index: 5;
 }
 
-.timeline {
+.edu-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ── Header ── */
+.edu-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 5rem;
+}
+
+.edu-section-title {
+    font-family: var(--font);
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #a855f7, var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    line-height: 1;
+}
+
+.edu-section-subtitle {
+    margin-top: 1.5rem;
+    color: var(--text-faint);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* ── List ── */
+.edu-list {
+    padding: 0;
+}
+
+/* ── Item ── */
+.edu-item {
     position: relative;
-    padding-left: 45px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    padding: 4rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    transition: all 0.5s ease;
 }
 
-.timeline::before {
-    content: '';
+.edu-item:hover {
+    padding-left: 2rem;
+}
+
+/* Big ghost year behind */
+.ghost-year {
     position: absolute;
-    left: 14px;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) translateX(0);
+    opacity: 0.04;
+    line-height: 1;
+    font-size: clamp(8rem, 20vw, 16rem);
+    font-weight: 900;
+    color: var(--accent);
+    font-family: var(--font);
+    pointer-events: none;
+    user-select: none;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 0;
+    letter-spacing: -0.04em;
+}
+
+.edu-item:hover .ghost-year {
+    transform: translateY(-50%) translateX(40px);
+    opacity: 0.1;
+    color: #a855f7;
+}
+
+/* Left accent bar */
+.edu-accent-bar {
+    position: absolute;
+    left: 0;
     top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom,
-            var(--accent),
-            var(--accent-2),
-            rgba(124, 58, 237, 0.1),
-            transparent);
-    opacity: 0.5;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(to bottom, #a855f7, var(--accent-2));
+    transition: height 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    border-radius: 2px;
 }
 
-.tl-item {
+.edu-item:hover .edu-accent-bar {
+    height: 100%;
+}
+
+/* Content layout */
+.edu-content-wrapper {
     position: relative;
-}
-
-.tl-pulse {
-    position: absolute;
-    left: -38px;
-    top: 24px;
-    width: 10px;
-    height: 10px;
-    background: var(--accent);
-    z-index: 2;
-    box-shadow: 0 0 15px var(--accent);
-    transform: rotate(45deg);
-    /* Diamond Shape */
-}
-
-.tl-pulse::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border: 1px solid var(--accent);
-    transform: rotate(0deg);
-    /* Counter-rotate is not needed, let ripple be diamond too */
-    animation: ripple-sh 2s infinite;
-}
-
-@keyframes ripple-sh {
-    0% {
-        transform: scale(1);
-        opacity: 0.8;
-    }
-
-    100% {
-        transform: scale(2.2);
-        opacity: 0;
-    }
-}
-
-.tl-card {
-    padding: 32px;
-    background: rgba(255, 255, 255, 0.01);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 28px;
-    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.tl-card:hover {
-    transform: translateX(10px);
-    border-color: rgba(124, 58, 237, 0.3);
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.tl-main {
+    z-index: 1;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 32px;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
 }
 
-.tl-info {
+@media (min-width: 768px) {
+    .edu-content-wrapper {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+}
+
+.edu-info {
     flex: 1;
 }
 
-.tl-meta {
-    margin-bottom: 12px;
+.edu-period {
+    font-family: var(--mono);
+    color: var(--accent-2);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin: 0 0 1rem;
 }
 
-.tl-date {
-    font-size: 0.85rem;
-    color: var(--accent-2);
-    font-family: var(--mono);
-    font-weight: 700;
+.edu-degree {
+    font-family: var(--font);
+    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    margin: 0;
+    transition: transform 0.5s ease;
     letter-spacing: -0.02em;
 }
 
-.tl-card h3 {
-    font-size: 1.35rem;
-    font-weight: 800;
-    margin-bottom: 12px;
-    color: var(--text);
-    line-height: 1.25;
+.edu-item:hover .edu-degree {
+    transform: translateX(8px);
 }
 
-.tl-inst {
-    font-size: 1rem;
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
-/* ── GPA Simplified Badge ── */
-.tl-viz {
+/* Meta (right side) */
+.edu-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
     flex-shrink: 0;
 }
 
-.cgpa-badge {
-    padding: 8px 16px;
-    background: rgba(6, 182, 212, 0.05);
-    border: 1px solid rgba(6, 182, 212, 0.2);
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: var(--accent-2);
+@media (min-width: 768px) {
+    .edu-meta {
+        align-items: flex-end;
+        text-align: right;
+    }
+}
+
+.edu-institution {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Badge with sliding gradient */
+.edu-badge {
+    position: relative;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    cursor: default;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.edu-badge-text {
+    position: relative;
+    z-index: 2;
     font-family: var(--mono);
-    letter-spacing: -0.01em;
-    backdrop-filter: blur(8px);
-    white-space: nowrap;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.edu-badge-slide {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #a855f7, var(--accent-2));
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.edu-item:hover .edu-badge-slide {
+    transform: translateX(0);
+}
+
+/* ── Footer Decoration ── */
+.edu-footer-deco {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    opacity: 0.4;
+}
+
+.edu-footer-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #a855f7);
+}
+
+.edu-footer-line.right {
+    background: linear-gradient(90deg, var(--accent-2), transparent);
+}
+
+.edu-footer-text {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.6em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .edu-container {
+        padding: 0 3rem;
+    }
 }
 
 @media (max-width: 768px) {
-    .tl-main {
+    .edu-section {
+        padding: 5rem 0;
+    }
+
+    .edu-container {
+        padding: 0 1.5rem;
+    }
+
+    .edu-header-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 24px;
+        margin-bottom: 3rem;
     }
 
-    .tl-card {
-        padding: 24px;
+    .edu-item {
+        padding: 2.5rem 0;
     }
 
-    .gpa-container {
-        width: 70px;
-        height: 70px;
+    .edu-item:hover {
+        padding-left: 1rem;
+    }
+
+    .ghost-year {
+        font-size: 6rem;
+    }
+
+    .edu-degree {
+        font-size: 1.4rem;
+    }
+
+    .edu-institution {
+        font-size: 0.95rem;
     }
 }

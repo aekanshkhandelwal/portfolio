@@ -5,8 +5,8 @@ const links = ['about', 'skills', 'projects', 'certifications', 'education', 'co
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
     const [visible, setVisible] = useState(true)
+    const [isOpen, setIsOpen] = useState(false)
     const [active, setActive] = useState('')
     const lastScrollY = useRef(0)
 
@@ -14,12 +14,12 @@ export default function Navbar() {
         const handleScroll = () => {
             const currentScrollY = window.scrollY
 
-            // Scrolled state for styling (glass effect)
+            // Scrolled state for styling
             setScrolled(currentScrollY > 50)
 
-            // Show only at top, hide when scrolled down
+            // Hide/Show logic
             if (!isOpen) {
-                if (currentScrollY > 50) {
+                if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
                     setVisible(false)
                 } else {
                     setVisible(true)
@@ -68,7 +68,7 @@ export default function Navbar() {
         <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${!visible ? 'hidden' : ''} ${isOpen ? 'menu-open' : ''}`}>
             <div className="nav-inner">
                 <a href="#hero" className="nav-logo" onClick={scrollToTop}>
-                    AK<span className="dot">.</span>
+                    AK
                 </a>
 
 

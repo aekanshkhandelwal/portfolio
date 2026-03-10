@@ -12,7 +12,7 @@ export default function About() {
 
                         <div className="about-content-inner">
                             <h2 className="section-title">
-                                Passionate about <span className="gradient-text">Data &amp; Insights</span>
+                                Passionate about<br />  <span className="gradient-text">Data &amp; Insights</span>
                             </h2>
                             <p className="about-p">
                                 I am Aekansh Khandelwal, an <strong>Agentic AI &amp; Automation</strong> specialist and <strong>Data Analyst</strong> focused on

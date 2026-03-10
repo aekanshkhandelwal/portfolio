@@ -47,15 +47,29 @@ ul {
   list-style: none;
 }
 
+/* ── Global Page Wrapper ── */
+.page {
+  width: 100%;
+  max-width: 1440px;
+  /* Standardized container width */
+  margin: 0 auto;
+  position: relative;
+  background: transparent;
+  /* Ensure fixed children also respect the max-width if they are inside .page */
+}
+
 /* ── Shared Utilities ── */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 clamp(1.25rem, 5vw, 3rem);
+  /* Proportional side padding */
+  width: 100%;
 }
 
 .section {
-  padding: 120px 0;
+  padding: clamp(3.75rem, 10vh, 7.5rem) 0;
+  /* Proportional vertical spacing */
   background: transparent !important;
   position: relative;
   z-index: 5;

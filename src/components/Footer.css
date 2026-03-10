@@ -1,5 +1,5 @@
 .footer {
-    padding: 80px 0 40px;
+    padding: clamp(4rem, 12vh, 8rem) 0 clamp(2rem, 6vh, 4rem);
     border-top: 1px solid rgba(255, 255, 255, 0.03);
     background: transparent;
     backdrop-filter: blur(10px);
@@ -9,8 +9,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 80px;
-    margin-bottom: 64px;
+    gap: clamp(2.5rem, 8vw, 6rem);
+    margin-bottom: clamp(2rem, 6vh, 4rem);
 }
 
 .footer-tagline {

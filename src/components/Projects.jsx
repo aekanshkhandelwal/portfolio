@@ -1,4 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, cloneElement } from 'react';
+import {
+    Bot, Trello, Mail, BarChart3, Database, Eraser,
+    PlayCircle, ShieldCheck, Gamepad, Folder,
+    ExternalLink, Radio, Binary, Box, Crosshair,
+    Cpu, Zap, Star, Activity, ArrowRight, Layers,
+    Globe, Code2, Terminal, Settings, Wifi
+} from 'lucide-react';
 import useReveal from '../hooks/useReveal';
 import './Projects.css';
 
@@ -17,11 +24,13 @@ const projects = [
             'Premium glassmorphism UI with frosted effects, dynamic glow shadows, and mobile-first responsive design.',
             'Robust Markdown rendering with prompt caching for instantaneous results.',
         ],
+        action: "SYNTHESIZE",
         metrics: [
             { val: 'RAG', label: 'Architecture' },
             { val: 'Gemini', label: 'Engine' },
             { val: 'Pinecone', label: 'DB' },
         ],
+        icon: <Bot />
     },
     {
         title: 'Linear Clone - Project Management Tool',
@@ -36,11 +45,13 @@ const projects = [
             'Implemented secure authentication using JWT and Google OAuth with a scalable Node.js & MongoDB backend.',
             'Designed a premium, dark-themed UI with smooth animations and a customizable sidebar for enhanced experience.',
         ],
+        action: "DEPLOY",
         metrics: [
             { val: 'MERN', label: 'Full Stack' },
             { val: 'JWT', label: 'Secure Auth' },
             { val: 'UI/UX', label: 'Premium' },
         ],
+        icon: <Trello />
     },
     {
         title: 'SendWise.ai — AI Email Command Centre',
@@ -55,11 +66,13 @@ const projects = [
             'Implemented smart inbox decoding, AI-powered summarization, and a daily digest.',
             'Ensured privacy-first design with local data management and secure OAuth authentication.',
         ],
+        action: "DECODE",
         metrics: [
             { val: 'Groq', label: 'LLM Inference' },
             { val: 'Gmail', label: 'API Integration' },
             { val: 'Local', label: 'Privacy' },
         ],
+        icon: <Mail />
     },
     {
         title: 'Retail Chain Insights Dashboard',
@@ -74,11 +87,13 @@ const projects = [
             'Tracked business-critical KPIs boosting insight effectiveness by ~40%.',
             'Streamlined reporting cutting manual Excel tasks by 60%.',
         ],
+        action: "ANALYZE",
         metrics: [
             { val: '15K+', label: 'Transactions' },
             { val: '5+', label: 'Cities' },
             { val: '60%', label: 'Time Saved' },
         ],
+        icon: <BarChart3 />
     },
     {
         title: 'CTGAN — Privacy-Preserving Synthetic Data Generation',
@@ -91,11 +106,13 @@ const projects = [
             'Engineered sophisticated preprocessing including Mode-Specific Normalization using Variational Gaussian Mixture models.',
             'Achieved realistic data augmentation for imbalanced scam detection datasets while preserving statistical distributions.',
         ],
+        action: "SIMULATE",
         metrics: [
             { val: 'CTGAN', label: 'Architecture' },
             { val: 'VGM', label: 'Normalization' },
             { val: 'Fraud', label: 'Augmentation' },
         ],
+        icon: <Database />
     },
     {
         title: 'No-Code Data Cleaning Tool',
@@ -110,11 +127,13 @@ const projects = [
             'Implemented "Smart Clean" features including duplicate removal, missing value handling, and column formatting.',
             'Enabled instant file export, allowing users to download cleaned datasets as CSV files seamlessly.',
         ],
+        action: "SCRUB",
         metrics: [
             { val: 'Python', label: 'Engine' },
             { val: 'Streamlit', label: 'Framework' },
             { val: 'No-Code', label: 'User Focus' },
         ],
+        icon: <Eraser />
     },
     {
         title: 'Streaming Platform Netflix Analytics System',
@@ -128,11 +147,13 @@ const projects = [
             'Revealed user engagement trends and genre preferences using 15+ optimized SQL queries.',
             'Identified high-impact content categories for data-backed strategy recommendations.',
         ],
+        action: "QUERY",
         metrics: [
             { val: '10K+', label: 'Records' },
             { val: '15+', label: 'SQL Queries' },
             { val: '40%', label: 'Insight Boost' },
         ],
+        icon: <PlayCircle />
     },
     {
         title: 'ML Model for Spam Detection',
@@ -145,10 +166,12 @@ const projects = [
             'Implemented multiple supervised learning algorithms for classification.',
             'Achieved high accuracy in detecting spam messages with a user-friendly interface.',
         ],
+        action: "CLASSIFY",
         metrics: [
             { val: 'ML', label: 'Supervised' },
             { val: 'AI', label: 'Detection' },
         ],
+        icon: <ShieldCheck />
     },
     {
         title: 'Video Games Sales Interactive Dashboard',
@@ -162,11 +185,13 @@ const projects = [
             'Visualized top-selling titles and publishers like Nintendo, Activision, and EA.',
             'Implemented interactive filters for Genre and Platform to uncover market trends.',
         ],
+        action: "VISUALIZE",
         metrics: [
             { val: '8.82bn', label: 'Total Sales' },
             { val: '30Y', label: 'Time Span' },
             { val: 'Power BI', label: 'Visualization' },
         ],
+        icon: <BarChart3 />
     },
     {
         title: 'Movie Recommender System',
@@ -178,10 +203,12 @@ const projects = [
             'Analyzed user preferences and ratings to provide tailored recommendations.',
             'Utilized collaborative filtering and content-based techniques.',
         ],
+        action: "RECOMMEND",
         metrics: [
             { val: 'ML', label: 'Recommended' },
             { val: 'UX', label: 'Engagement' },
         ],
+        icon: <Star />
     },
     {
         title: 'Social Media Platform (Prototype)',
@@ -193,10 +220,12 @@ const projects = [
             'Developed core social features including image uploads and communication.',
             'Created a prototype for user interaction testing.',
         ],
+        action: "PROTOTYPE",
         metrics: [
             { val: '2', label: 'Users' },
             { val: 'Python', label: 'Prototype' },
         ],
+        icon: <Globe />
     },
     {
         title: 'Library Management System',
@@ -208,18 +237,34 @@ const projects = [
             'Organized inventory and tracking for book loans and returns.',
             'Implemented dual interfaces for distinct user roles.',
         ],
+        action: "CATALOG",
         metrics: [
             { val: 'DB', label: 'Management' },
             { val: 'UI', label: 'Multi-role' },
         ],
+        icon: <Folder />
     },
 ];
 
 export default function Projects() {
-    const [viewMode, setViewMode] = useState('grid'); // 'grid', 'list', 'swipe'
+    const [viewMode, setViewMode] = useState('grid'); // 'grid', 'swipe', 'desktop', 'comic'
     useReveal([viewMode]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
+    const [filter, setFilter] = useState('All');
+    const [showStartMenu, setShowStartMenu] = useState(false);
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 60000); // Update every minute
+        return () => clearInterval(timer);
+    }, []);
+
+    const filteredProjects = filter === 'All'
+        ? projects
+        : projects.filter(p => p.tags.some(t => t.toLowerCase().includes(filter.toLowerCase())));
 
     const handleMouseMove = (e) => {
         const card = e.currentTarget;
@@ -232,25 +277,633 @@ export default function Projects() {
     };
 
     const nextProject = () => {
-        setCurrentIndex((prev) => (prev + 1) % projects.length);
+        setCurrentIndex((prev) => (prev + 1) % filteredProjects.length);
         setIsFlipped(false);
     };
 
     const prevProject = () => {
-        setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
+        setCurrentIndex((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length);
         setIsFlipped(false);
     };
 
-    const handleCardClick = (e, idx) => {
-        // Only trigger flip in swipe view on mobile (implicitly handled by CSS media query)
-        if (viewMode === 'swipe') {
-            if (idx === currentIndex) {
-                setIsFlipped(!isFlipped);
-            } else {
-                setCurrentIndex(idx);
-                setIsFlipped(false);
-            }
+    // --- Gemini Canvas Multi-Window State ---
+    const [openWindows, setOpenWindows] = useState([]); // Array of project indices
+    const [activeWindow, setActiveWindow] = useState(null); // Current focused index
+    const [windowPositions, setWindowPositions] = useState({}); // { [idx]: { x, y } }
+    const [windowViews, setWindowViews] = useState({}); // { [idx]: 'folder' | 'desc' }
+    const [windowZ, setWindowZ] = useState(100);
+
+    const bringToFront = (idx) => {
+        setActiveWindow(idx);
+        setWindowZ(prev => prev + 1);
+    };
+
+    const handleOpenWindow = (idx) => {
+        if (!openWindows.includes(idx)) {
+            setOpenWindows([...openWindows, idx]);
+            // Initial position offset slightly for each window
+            setWindowPositions(prev => ({
+                ...prev,
+                [idx]: { x: 100 + (openWindows.length * 30), y: 80 + (openWindows.length * 30) }
+            }));
+            setWindowViews(prev => ({ ...prev, [idx]: 'folder' }));
         }
+        bringToFront(idx);
+    };
+
+    const handleCloseWindow = (e, idx) => {
+        e.stopPropagation();
+        setOpenWindows(openWindows.filter(id => id !== idx));
+        if (activeWindow === idx) setActiveWindow(null);
+    };
+
+    const toggleWindowView = (idx, view) => {
+        setWindowViews(prev => ({ ...prev, [idx]: view }));
+    };
+
+    // Simple Dragging Logic for React
+    const startDrag = (e, idx) => {
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const initialX = windowPositions[idx]?.x || 100;
+        const initialY = windowPositions[idx]?.y || 100;
+
+        const onMouseMove = (moveE) => {
+            const dx = moveE.clientX - startX;
+            const dy = moveE.clientY - startY;
+            setWindowPositions(prev => ({
+                ...prev,
+                [idx]: { x: initialX + dx, y: initialY + dy }
+            }));
+        };
+
+        const onMouseUp = () => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+        bringToFront(idx);
+    };
+
+    const getIconForProject = (project) => {
+        if (project.title.toLowerCase().includes('rag') || project.title.toLowerCase().includes('bot')) return 'fa-robot';
+        if (project.title.toLowerCase().includes('linear') || project.title.toLowerCase().includes('management')) return 'fa-tasks';
+        if (project.title.toLowerCase().includes('email') || project.title.toLowerCase().includes('sendwise')) return 'fa-envelope-open-text';
+        if (project.title.toLowerCase().includes('retail') || project.title.toLowerCase().includes('insights')) return 'fa-chart-pie';
+        if (project.title.toLowerCase().includes('synthetic') || project.title.toLowerCase().includes('ctgan')) return 'fa-database';
+        if (project.title.toLowerCase().includes('cleaning')) return 'fa-broom';
+        if (project.title.toLowerCase().includes('netflix') || project.title.toLowerCase().includes('streaming')) return 'fa-play-circle';
+        if (project.title.toLowerCase().includes('spam')) return 'fa-shield-virus';
+        if (project.title.toLowerCase().includes('game') || project.title.toLowerCase().includes('video')) return 'fa-gamepad';
+        return 'fa-folder';
+    };
+
+    const renderHudContent = () => {
+        const active = filteredProjects[currentIndex];
+        if (!active) return null;
+
+        return (
+            <div className="hud-view-container">
+                {/* Background HUD Layers */}
+                <div className="hud-bg-grid" />
+                <div className="hud-bg-scanlines" />
+
+                {/* Main Command Console Layout */}
+                <div className="hud-console-layout">
+
+                    {/* LEFT: MISSION SELECTION COLUMN */}
+                    <aside className="hud-aside selection-col scrollbar-hide">
+                        <div className="hud-mission-log-header">
+                            MISSION_LOG_V24.0
+                        </div>
+                        <div className="hud-mission-list">
+                            {filteredProjects.map((proj, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setCurrentIndex(idx)}
+                                    className={`hud-mission-btn ${currentIndex === idx ? 'active' : ''}`}
+                                >
+                                    <div className="hud-btn-header">
+                                        <span className="hud-mission-id">
+                                            Mission_{idx < 9 ? `0${idx + 1}` : idx + 1}
+                                        </span>
+                                        {currentIndex === idx && <div className="hud-active-pulse" />}
+                                    </div>
+                                    <h3 className="hud-mission-title">
+                                        {proj.title}
+                                    </h3>
+                                </button>
+                            ))}
+                        </div>
+                    </aside>
+
+                    {/* CENTER: MISSION BRIEFING PANEL */}
+                    <main className="hud-main-briefing">
+                        <div className="hud-briefing-window">
+                            {/* Briefing Textures */}
+                            <div className="hud-texture-top-right" />
+                            <div className="hud-glow-line-bottom" />
+
+                            {/* Header Area */}
+                            <div className="hud-briefing-header">
+                                <div className="hud-header-info">
+                                    <h2 className="hud-glitch-title">BRIEFING</h2>
+                                    <p className="hud-subtitle">Tactical Blueprint</p>
+                                </div>
+                                <div className="hud-icon-box">
+                                    {active.icon && cloneElement(active.icon, { className: "hud-icon" })}
+                                </div>
+                            </div>
+
+                            {/* Content Area */}
+                            <div className="hud-briefing-content">
+                                <div className="hud-project-info">
+                                    <div className="hud-tag-cloud">
+                                        {active.tags.map(tag => (
+                                            <span key={tag} className="hud-tag">{tag}</span>
+                                        ))}
+                                    </div>
+                                    <h4 className="hud-active-title">
+                                        {active.title}
+                                    </h4>
+                                    <div className="hud-desc-container">
+                                        <p className="hud-desc">
+                                            {active.desc}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Large Stat Callouts */}
+                                <div className="hud-metrics-grid">
+                                    {active.metrics.map((m, i) => (
+                                        <div key={i} className="hud-metric-box">
+                                            <div className="hud-metric-id">Stat_{i + 1}</div>
+                                            <p className="hud-metric-label">{m.label}</p>
+                                            <p className="hud-metric-val">{m.val}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Launch Action */}
+                            <a
+                                href={active.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hud-launch-btn"
+                            >
+                                INITIALIZE_{active.action || 'LAUNCH'} <ExternalLink size={24} />
+                            </a>
+                        </div>
+                    </main>
+
+                    {/* RIGHT: SYSTEM LOGS & PROJECT TELEMETRY */}
+                    <aside className="hud-aside telemetry-col">
+                        {/* Status HUD */}
+                        <div className="hud-status-panel">
+                            <div className="hud-status-header">
+                                <div className="hud-status-icon-box">
+                                    <Radio className="hud-radio-icon" />
+                                </div>
+                                <div className="hud-status-text">
+                                    <p className="hud-small-cap">System Status</p>
+                                    <p className="hud-status-val">Operational</p>
+                                </div>
+                            </div>
+
+                            <div className="hud-efficiency-module">
+                                <p className="hud-small-cap tracking-widest">Global Efficiency</p>
+                                <div className="hud-progress-track">
+                                    <div className="hud-progress-fill" style={{ width: '92%' }} />
+                                </div>
+                                <div className="hud-progress-labels">
+                                    <span>0%</span>
+                                    <span>DATA_STREAM_STABLE</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* PROJECT RESOURCES TELEMETRY */}
+                        <div className="hud-telemetry-panel">
+                            <div className="hud-telemetry-bg-effect" />
+
+                            <h4 className="hud-telemetry-header">
+                                <Binary size={12} /> Mission Resources
+                            </h4>
+
+                            <div className="hud-resource-list">
+                                {active.tags.map((tag, i) => (
+                                    <div key={tag} className="hud-resource-item">
+                                        <div className="hud-resource-info">
+                                            <span className="hud-resource-name">
+                                                {tag}
+                                            </span>
+                                            <span className="hud-resource-hex">
+                                                0x0{i + 1}_LOADED
+                                            </span>
+                                        </div>
+                                        <div className="hud-resource-bar">
+                                            <div
+                                                className="hud-resource-fill"
+                                                style={{ width: `${60 + (i * 12)}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {/* Tactical Footer */}
+                                <div className="hud-tactical-footer">
+                                    <div className="hud-diagnostic-row">
+                                        <span>Diagnostic Link</span>
+                                        <span className="text-purple-500">Encrypted</span>
+                                    </div>
+                                    <div className="hud-bars-viz">
+                                        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                                            <div key={i} className="hud-viz-bar" style={{ height: `${Math.random() * 8 + 4}px` }} />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Background Decoration */}
+                            <div className="hud-deco-icon">
+                                <Box size={96} />
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+
+                {/* Comic Branding Footer */}
+                <footer className="hud-footer">
+                    <div className="hud-footer-left">
+                    </div>
+                    <div className="hud-footer-right">
+
+                    </div>
+                </footer>
+            </div>
+        );
+    };
+
+    const renderComicContent = () => {
+        const impactTags = ['POW!', 'ZAP!', 'BOOM!', 'WHAM!', 'BANG!', 'KAPOW!'];
+        const impactClasses = ['impact-pow', 'impact-zap', 'impact-boom', 'impact-wham', 'impact-bang'];
+
+        return (
+            <div className="comic-page">
+                <div className="comic-header-panel reveal">
+                    <div className="comic-issue-tag">Issue #24</div>
+                    <h2 className="comic-main-title tracking-tighter">Featured <span>Projects</span></h2>
+                    <p className="comic-sub-title">"A collection of my latest high-stakes missions and experimental builds!"</p>
+                </div>
+
+                {filteredProjects.map((project, idx) => {
+                    const impactTag = impactTags[idx % impactTags.length];
+                    const impactClass = impactClasses[idx % impactClasses.length];
+
+                    // Assign randomized spans and tilts based on index
+                    let panelClass = 'comic-panel reveal';
+                    if (idx === 0) panelClass += ' span-2-1';
+                    else if (idx % 3 === 0) panelClass += ' span-2-1';
+                    else if (idx % 4 === 0) panelClass += ' row-span-2';
+
+                    const rotationClass = idx % 2 === 0 ? 'rot-pos-slight' : 'rot-neg-slight';
+                    panelClass += ` ${rotationClass}`;
+
+                    return (
+                        <div
+                            className={panelClass}
+                            key={idx}
+                            style={{ '--panel-accent': `var(--${project.accent || 'accent-purple'})` }}
+                        >
+                            <div className="comic-panel-image">
+                                <div className={`comic-tag-impact ${impactClass}`}>{impactTag}</div>
+                                {project.poster ? (
+                                    <img src={project.poster} alt={project.title} className="comic-image-asset" />
+                                ) : (
+                                    <div className="w-full h-full bg-slate-800" />
+                                )}
+                            </div>
+                            <div className="comic-panel-content">
+                                <div className="comic-speech-bubble">
+                                    <h3 className="comic-title">{project.title}</h3>
+                                    <div className="comic-chips">
+                                        {project.tags.slice(0, 3).map((tag, tIdx) => (
+                                            <span className="comic-chip" key={tIdx}>{tag}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                                <p className="comic-desc">{project.desc}</p>
+
+                                {project.bullets && project.bullets.length > 0 && (
+                                    <ul className="comic-bullets">
+                                        {project.bullets.map((bullet, bIdx) => (
+                                            <li key={bIdx} className="comic-bullet-item">{bullet}</li>
+                                        ))}
+                                    </ul>
+                                )}
+
+                                <div className="comic-footer">
+                                    <i className={`fas ${getIconForProject(project)} text-purple-500 font-bold`}></i>
+                                    {project.link ? (
+                                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="comic-link">
+                                            Read Mission Log
+                                        </a>
+                                    ) : (
+                                        <span className="comic-link">Classified Mission</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
+
+    const renderDesktopContent = () => {
+        const time = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const date = currentTime.toLocaleDateString([], { month: '2-digit', day: '2-digit', year: 'numeric' });
+
+        return (
+            <div className="monitor-view-wrapper reveal">
+                <div className="monitor-container animate-monitor">
+                    <div className="monitor-backglow"></div>
+                    <div className="monitor-frame">
+                        <div className="monitor-screen">
+                            <div className="screen-reflection"></div>
+                            <div className="desktop-env win11 consolidated">
+                                <div className="os-desktop-workspace">
+                                    {/* Project Folders */}
+                                    {projects.map((project, idx) => (
+                                        <div
+                                            key={idx}
+                                            className="os-icon-container"
+                                            onDoubleClick={() => handleOpenWindow(idx)}
+                                            onClick={() => bringToFront(idx)}
+                                        >
+                                            <div className="os-folder-visual">
+                                                <i className={`fas ${getIconForProject(project)}`}></i>
+                                            </div>
+                                            <span className="os-icon-label">{project.title}</span>
+                                        </div>
+                                    ))}
+
+                                    {/* About Me Folder */}
+                                    <div
+                                        className="os-icon-container"
+                                        onDoubleClick={() => handleOpenWindow('about')}
+                                        onClick={() => bringToFront('about')}
+                                    >
+                                        <div className="os-folder-visual" style={{ background: '#ffd43b' }}>
+                                            <i className="fas fa-user" style={{ color: 'rgba(66, 32, 6, 0.4)' }}></i>
+                                        </div>
+                                        <span className="os-icon-label">My Profile</span>
+                                    </div>
+                                </div>
+
+                                {/* Render Open Windows */}
+                                {openWindows.map((id) => {
+                                    const isAbout = id === 'about';
+                                    const project = isAbout ? null : projects[id];
+                                    const pos = windowPositions[id] || { x: 100, y: 100 };
+                                    const view = windowViews[id] || 'folder';
+                                    const isActive = activeWindow === id;
+                                    const title = isAbout ? 'My Profile' : project.title;
+
+                                    return (
+                                        <div
+                                            key={id}
+                                            className="os-window-canvas"
+                                            style={{
+                                                left: pos.x,
+                                                top: pos.y,
+                                                zIndex: isActive ? windowZ : 100 + openWindows.indexOf(id),
+                                                display: 'flex'
+                                            }}
+                                            onClick={() => bringToFront(id)}
+                                        >
+                                            <div className="os-window-header" onMouseDown={(e) => startDrag(e, id)}>
+                                                <div className="px-4 flex items-center gap-2 h-full">
+                                                    {view === 'desc' && (
+                                                        <button
+                                                            onClick={(e) => { e.stopPropagation(); toggleWindowView(id, 'folder'); }}
+                                                            className="mr-2 text-slate-400 hover:text-blue-600 cursor-pointer"
+                                                        >
+                                                            <i className="fas fa-arrow-left text-xs"></i>
+                                                        </button>
+                                                    )}
+                                                    <i className="fas fa-folder text-yellow-500 text-xs"></i>
+                                                    <span className="text-[11px] font-semibold text-slate-300">
+                                                        {title}
+                                                    </span>
+                                                </div>
+                                                <div className="os-window-controls h-full">
+                                                    <div className="os-control-btn"><i className="fas fa-minus"></i></div>
+                                                    <div className="os-control-btn"><i className="far fa-square"></i></div>
+                                                    <div className="os-control-btn close" onClick={(e) => handleCloseWindow(e, id)}><i className="fas fa-times"></i></div>
+                                                </div>
+                                            </div>
+
+                                            {/* Windows Address Bar */}
+                                            <div className="os-address-bar">
+                                                <div className="os-nav-actions">
+                                                    <i className="fas fa-arrow-left" onClick={(e) => { e.stopPropagation(); toggleWindowView(id, 'folder'); }}></i>
+                                                    <i className="fas fa-arrow-right"></i>
+                                                    <i className="fas fa-arrow-up"></i>
+                                                    <i className="fas fa-redo"></i>
+                                                </div>
+                                                <div className="os-breadcrumb-bar">
+                                                    <i className="fas fa-desktop text-[10px]"></i>
+                                                    <span>This PC</span>
+                                                    <i className="fas fa-chevron-right text-[8px]"></i>
+                                                    <span>Projects</span>
+                                                    <i className="fas fa-chevron-right text-[8px]"></i>
+                                                    <span>{title}</span>
+                                                </div>
+                                                <div className="os-search-bar">
+                                                    <i className="fas fa-search"></i>
+                                                    <span>Search {title}</span>
+                                                </div>
+                                            </div>
+
+                                            {view === 'folder' ? (
+                                                <div className="os-file-explorer">
+                                                    {isAbout ? (
+                                                        <>
+                                                            <div className="os-file-item" onClick={() => toggleWindowView(id, 'desc')}>
+                                                                <i className="fas fa-id-card text-blue-400"></i>
+                                                                <span className="os-file-name">Bio.html</span>
+                                                            </div>
+                                                            <div className="os-file-item" onClick={() => window.location.href = '#contact'}>
+                                                                <i className="fas fa-envelope text-amber-400"></i>
+                                                                <span className="os-file-name">Contact.lnk</span>
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <div className="os-file-item" onClick={() => toggleWindowView(id, 'desc')}>
+                                                                <i className="fas fa-file-alt text-blue-400"></i>
+                                                                <span className="os-file-name">Description.txt</span>
+                                                            </div>
+                                                            <a href={project.link} target="_blank" rel="noopener noreferrer" className="os-file-item" onClick={(e) => e.stopPropagation()}>
+                                                                <i className="fas fa-external-link-alt text-emerald-400"></i>
+                                                                <span className="os-file-name">Launch_App.exe</span>
+                                                            </a>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div className="os-txt-content window-content">
+                                                    {isAbout ? (
+                                                        <div className="text-center">
+                                                            <img src="https://ui-avatars.com/api/?name=Portfolio+User&background=0f172a&color=fff" className="w-16 h-16 rounded-full mx-auto mb-4 border-white/10" alt="Avatar" />
+                                                            <h3 className="font-bold text-white">Aekansh Khandelwal</h3>
+                                                            <p className="text-slate-400 text-xs mt-2">I build digital experiences that live on the web.</p>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <h2 className="gradient-text text-xl font-bold mb-4">{project.title}</h2>
+                                                            <p className="text-slate-400 text-sm leading-relaxed mb-6">{project.desc}</p>
+                                                            <div className="mb-4">
+                                                                <h4 className="text-[10px] font-bold text-slate-500 uppercase mb-2">Key Highlights:</h4>
+                                                                <ul className="text-xs text-slate-400 space-y-1">
+                                                                    {project.bullets.map((b, i) => <li key={i}>• {b}</li>)}
+                                                                </ul>
+                                                            </div>
+                                                            <div className="flex gap-2 flex-wrap">
+                                                                {project.tags.map((tag, i) => (
+                                                                    <span key={i} className="px-2 py-1 bg-white/5 text-[10px] rounded text-slate-400 border border-white/5">{tag}</span>
+                                                                ))}
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+
+                                {/* Start Menu Popup */}
+                                {showStartMenu && (
+                                    <div className="os-start-menu">
+                                        <div className="start-search">
+                                            <i className="fas fa-search search-icon"></i>
+                                            <input type="text" placeholder="Type to search..." autoFocus />
+                                        </div>
+
+                                        <div className="p-5 pb-2">
+
+                                            <div className="grid grid-cols-5 gap-2">
+                                                <div className="start-app-item" onClick={() => { handleOpenWindow('about'); setShowStartMenu(false); }}>
+                                                    <div className="start-app-icon bg-blue-500/20"><i className="fas fa-user text-blue-400"></i></div>
+                                                    <span>Profile</span>
+                                                </div>
+                                                {projects.slice(0, 4).map((p, i) => (
+                                                    <div key={i} className="start-app-item" onClick={() => { handleOpenWindow(i); setShowStartMenu(false); }}>
+                                                        <div className="start-app-icon bg-yellow-500/20"><i className={`fas ${getIconForProject(p)} text-yellow-500`}></i></div>
+                                                        <span>{p.title.split(' ')[0]}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="mt-5 mb-3">
+                                                <span className="text-xs font-bold text-white">Recommended</span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {projects.slice(0, 4).map((p, i) => (
+                                                    <div key={i} className="rec-item" onClick={() => { handleOpenWindow(i); setShowStartMenu(false); }}>
+                                                        <i className={`fas ${getIconForProject(p)} text-yellow-500 text-xs`}></i>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] font-medium text-white">{p.title}</span>
+                                                            <span className="text-[9px] text-slate-400">Recently added</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="os-start-footer">
+                                            <div className="flex items-center gap-3">
+                                                <img src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" className="w-8 h-8 rounded-full border border-white/10" alt="User" />
+                                                <span className="text-xs font-semibold text-white">Aekansh</span>
+                                            </div>
+                                            <i className="fas fa-power-off text-slate-400 hover:text-red-400 cursor-pointer"></i>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Taskbar */}
+                                <div className="os-taskbar-glass" onClick={() => showStartMenu && setShowStartMenu(false)}>
+                                    {/* Centered App Group */}
+                                    <div className="os-taskbar-apps">
+                                        <div
+                                            className={`os-taskbar-item ${showStartMenu ? 'active' : ''}`}
+                                            onClick={(e) => { e.stopPropagation(); setShowStartMenu(!showStartMenu); }}
+                                            title="Start"
+                                        >
+                                            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-blue-500" style={{ width: '24px', height: '24px' }} fill="#3b82f6">
+                                                <path d="M0 0h11.4v11.4H0V0zm12.6 0H24v11.4H12.6V0zM0 12.6h11.4V24H0V12.6zm12.6 0H24V24H12.6V12.6z" />
+                                            </svg>
+                                        </div>
+
+                                        <div className="os-taskbar-item text-slate-400" title="Search">
+                                            <i className="fas fa-search text-lg"></i>
+                                        </div>
+
+                                        <div className="w-px h-6 bg-white/10 mx-1"></div>
+
+                                        {openWindows.map(id => {
+                                            const isAbout = id === 'about';
+                                            const project = isAbout ? null : projects[id];
+                                            const icon = isAbout ? 'fa-user-circle' : getIconForProject(project);
+                                            const iconColor = isAbout ? 'text-slate-300' : 'text-yellow-500';
+
+                                            return (
+                                                <div
+                                                    key={id}
+                                                    className={`os-taskbar-item ${activeWindow === id ? 'active' : ''}`}
+                                                    onClick={() => bringToFront(id)}
+                                                    title={isAbout ? 'My Profile' : projects[id].title}
+                                                >
+                                                    <i className={`fas ${icon} ${iconColor} text-lg`}></i>
+                                                    <div className="os-dot-indicator" style={{ display: 'block' }}></div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <div className="os-taskbar-tray" onClick={(e) => e.stopPropagation()}>
+                                        <div className="os-tray-icons">
+                                            <i className="fas fa-chevron-up text-[10px]"></i>
+                                            <i className="fas fa-wifi"></i>
+                                            <i className="fas fa-volume-up"></i>
+                                            <i className="fas fa-battery-three-quarters"></i>
+                                        </div>
+                                        <div className="os-tray-time">
+                                            <span>{time}</span>
+                                            <span>{date}</span>
+                                        </div>
+                                        <div className="os-taskbar-tray-btn">
+                                            <i className="far fa-bell text-slate-400"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="monitor-brand">PORTFOLIO OS</div>
+                    </div>
+                    <div className="monitor-stand">
+                        <div className="stand-joint"></div>
+                        <div className="stand-neck"></div>
+                        <div className="stand-base"></div>
+                    </div>
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -258,89 +911,39 @@ export default function Projects() {
             <div className="container">
                 <div className="section-header reveal">
                     <div className="header-content">
-                        <h2 className="section-title">
-                            Featured <span className="gradient-text">Projects</span>
-                        </h2>
+                        <div className="header-left">
+                            <h2 className="section-title">
+                                Featured <span className="gradient-text">Projects</span>
+                            </h2>
+                        </div>
                         <div className="view-switcher">
-                            <button
-                                className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                                onClick={() => setViewMode('grid')}
-                                aria-label="Grid View"
-                            >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
-                                    <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
-                                </svg>
-                            </button>
-                            <button
-                                className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-                                onClick={() => setViewMode('list')}
-                                aria-label="List View"
-                            >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
-                                    <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
-                                </svg>
-                            </button>
-                            <button
-                                className={`view-btn ${viewMode === 'swipe' ? 'active' : ''}`}
-                                onClick={() => setViewMode('swipe')}
-                                aria-label="Swipe View"
-                            >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                    <path d="M7 12h10M7 8h10M7 16h10" />
-                                </svg>
-                            </button>
+                            {[
+                                { id: 'grid', icon: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z', title: 'Grid' },
+                                { id: 'desktop', icon: 'M4 4h16v12H4z M4 20h16 M10 20l-1-4 M14 20l1-4', title: 'Desktop' },
+                                { id: 'swipe', icon: 'M3 3h18v18H3z M7 12h10 M7 8h10 M7 16h10', title: 'HUD' },
+                                { id: 'comic', icon: 'M3 3h18v18H3z M7 7h10 M7 11h10 M14 15h3 M7 15h4', title: 'Comic' }
+                            ].map(view => (
+                                <button
+                                    key={view.id}
+                                    className={`view-btn ${viewMode === view.id ? 'active' : ''}`}
+                                    onClick={() => setViewMode(view.id)}
+                                    title={view.title}
+                                >
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d={view.icon} />
+                                    </svg>
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>
 
                 <div className={`projects-container ${viewMode}-view spotlight-parent`}>
-                    {viewMode === 'swipe' ? (
-                        <div className="swipe-wrapper">
-                            <button className="swipe-nav prev" onClick={prevProject} aria-label="Previous Project">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                            </button>
+                    {viewMode === 'swipe' && renderHudContent()}
 
-                            <div className="swipe-card-container">
-                                {projects.map((project, idx) => (
-                                    <div
-                                        className={`swipe-card-item ${idx === currentIndex ? 'active' : ''} ${idx < currentIndex ? 'prev' : ''} ${idx > currentIndex ? 'next' : ''}`}
-                                        key={idx}
-                                        onMouseMove={handleMouseMove}
-                                        onClick={(e) => handleCardClick(e, idx)}
-                                    >
-                                        <div className="reveal visible">
-                                            {project.link ? (
-                                                <div className="project-card-wrapper">
-                                                    <ProjectCard project={project} isFlipped={idx === currentIndex && isFlipped} />
-                                                </div>
-                                            ) : (
-                                                <ProjectCard project={project} isFlipped={idx === currentIndex && isFlipped} />
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button className="swipe-nav next" onClick={nextProject} aria-label="Next Project">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </button>
-
-                            <div className="swipe-dots">
-                                {projects.map((_, idx) => (
-                                    <span
-                                        key={idx}
-                                        className={`swipe-dot ${idx === currentIndex ? 'active' : ''}`}
-                                        onClick={() => setCurrentIndex(idx)}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className={viewMode === 'grid' ? 'projects-grid' : 'projects-list'}>
-                            {projects.map((project, idx) => (
+                    {viewMode === 'grid' && (
+                        <div className="projects-grid">
+                            {filteredProjects.map((project, idx) => (
                                 <div
                                     className="reveal"
                                     key={idx}
@@ -358,21 +961,17 @@ export default function Projects() {
                             ))}
                         </div>
                     )}
+
+                    {viewMode === 'desktop' && renderDesktopContent()}
+                    {viewMode === 'comic' && renderComicContent()}
                 </div>
-                {viewMode === 'swipe' && isFlipped && projects[currentIndex].link && (
-                    <div className="swipe-action-overlay reveal visible">
-                        <a href={projects[currentIndex].link} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                            Visit Live Project ↗
-                        </a>
-                    </div>
-                )}
             </div>
         </section>
     );
 }
 
 // Sub-component for the card content to keep Projects.jsx clean
-function ProjectCard({ project, isFlipped }) {
+function ProjectCard({ project, isFlipped, onNext }) {
     return (
         <article className={`project-card ${project.accent} ${isFlipped ? 'is-flipped' : ''}`}>
             <div className="card-glow"></div>
@@ -478,6 +1077,19 @@ function ProjectCard({ project, isFlipped }) {
                                 </div>
                             ))}
                         </div>
+                    )}
+
+                    {onNext && (
+                        <button
+                            className="card-next-btn"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onNext();
+                            }}
+                        >
+                            <span>Next Project</span>
+                            <i className="fas fa-arrow-right"></i>
+                        </button>
                     )}
                 </div>
             </div>
