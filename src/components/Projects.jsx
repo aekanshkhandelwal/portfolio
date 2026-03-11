@@ -1,4 +1,4 @@
-import { useState, useEffect, cloneElement } from 'react';
+import { useState, useEffect, cloneElement, useRef } from 'react';
 import {
     Bot, Trello, Mail, BarChart3, Database, Eraser,
     PlayCircle, ShieldCheck, Gamepad, Folder,
@@ -258,7 +258,7 @@ export default function Projects() {
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentTime(new Date());
-        }, 60000); // Update every minute
+        }, 60000);
         return () => clearInterval(timer);
     }, []);
 
@@ -295,6 +295,7 @@ export default function Projects() {
     const [maximizedWindows, setMaximizedWindows] = useState([]);
     const [minimizedWindows, setMinimizedWindows] = useState([]);
     const [monitorStatus, setMonitorStatus] = useState('on'); // 'on' | 'off' | 'booting' | 'shutting-down'
+    const lastPowerToggle = useRef(0);
 
     const handlePowerToggle = (e) => {
         if (e) {
@@ -302,10 +303,10 @@ export default function Projects() {
             if (e.cancelable) e.preventDefault();
         }
         
-        // Prevent accidental double toggles on touch
+        // Prevent accidental double toggles on touch/click combo
         const now = Date.now();
-        if (window._lastPowerToggle && (now - window._lastPowerToggle < 500)) return;
-        window._lastPowerToggle = now;
+        if (now - lastPowerToggle.current < 800) return;
+        lastPowerToggle.current = now;
 
         if (monitorStatus === 'on') {
             setMonitorStatus('shutting-down');
@@ -319,6 +320,7 @@ export default function Projects() {
             }, 1500);
         }
     };
+
 
     const bringToFront = (idx) => {
         setActiveWindow(idx);
@@ -393,8 +395,14 @@ export default function Projects() {
             setIsDragging(true);
             const currentX = isTouch ? moveE.touches[0].clientX : moveE.clientX;
             const currentY = isTouch ? moveE.touches[0].clientY : moveE.clientY;
-            const dx = currentX - startX;
-            const dy = currentY - startY;
+            
+            // Account for scale if on mobile
+            let scale = 1;
+            if (window.innerWidth <= 480) scale = 0.28;
+            else if (window.innerWidth <= 768) scale = 0.3;
+
+            const dx = (currentX - startX) / scale;
+            const dy = (currentY - startY) / scale;
 
             setWindowPositions(prev => ({
                 ...prev,
@@ -1100,15 +1108,15 @@ export default function Projects() {
 
                                         <div className="os-taskbar-tray" onClick={(e) => e.stopPropagation()}>
                                             <div className="os-tray-icons">
-                                                <i className="fas fa-chevron-up text-[10px]"></i>
+                                                <i className="fas fa-chevron-up"></i>
                                                 <i className="fas fa-wifi"></i>
                                                 <i className="fas fa-volume-up"></i>
                                                 <i className="fas fa-battery-three-quarters"></i>
                                                 <i className="far fa-bell"></i>
                                             </div>
                                             <div className="os-tray-time">
-                                                <span>{time}</span>
-                                                <span>{date}</span>
+                                                <span className="tray-time-val">{time}</span>
+                                                <span className="tray-date-val">{date}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1119,10 +1127,10 @@ export default function Projects() {
                             <div className={`monitor-status-light ${monitorStatus}`}></div>
                             <button
                                 className={`monitor-power-btn ${monitorStatus}`}
-                                onClick={(e) => handlePowerToggle(e)}
-                                onTouchEnd={(e) => handlePowerToggle(e)}
+                                onClick={handlePowerToggle}
+                                onTouchEnd={handlePowerToggle}
                                 title={monitorStatus === 'on' ? "Power Off" : "Power On"}
-                                style={{ touchAction: 'manipulation', background: 'none', border: 'none', cursor: 'pointer' }}
+                                style={{ touchAction: 'manipulation', background: 'none', border: 'none', cursor: 'pointer', outline: 'none' }}
                             >
                                 <i className="fas fa-power-off"></i>
                             </button>
@@ -1177,80 +1185,41 @@ export default function Projects() {
 
                     {viewMode === 'grid' && (
                         <div className="projects-grid">
-                            {filteredProjects.map((project, idx) => (
-                                <div
-                                    className="reveal"
-                                    key={idx}
-                                    onMouseMove={handleMouseMove}
-                                    onMouseEnter={(e) => e.currentTarget.classList.add('visible')}
-                                >
-                                    {project.link ? (
+                            {filteredProjects.map((project) => {
+                                const originalIdx = projects.findIndex(p => p.title === project.title);
+                                return (
+                                    <div
+                                        className="reveal"
+                                        key={originalIdx}
+                                        onMouseMove={handleMouseMove}
+                                        onMouseEnter={(e) => e.currentTarget.classList.add('visible')}
+                                    >
                                         <div className="project-card-wrapper">
-                                            <div className="project-card-click-area" onClick={() => { setViewMode('desktop'); handleOpenWindow(idx); }}>
-                                                <div className="project-card">
-                                                    <div className="card-glow" />
-                                                    <div className="pc-preview">
-                                                        <div className="preview-visual">
-                                                            {project.image && project.image.endsWith('.mp4') ? (
-                                                                <video src={project.image} autoPlay muted loop playsInline className="pc-image" />
-                                                            ) : project.image ? (
-                                                                <img src={project.image} alt={project.title} className="pc-image" />
-                                                            ) : (
-                                                                <div className="pc-image-placeholder"><Bot /></div>
-                                                            )}
-                                                        </div>
-                                                        <div className="preview-overlay">
-                                                            <div className="preview-text">BOOT_INTERACE.sys</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="pc-content">
-                                                        <div className="pc-tags">
-                                                            {project.tags.slice(0, 3).map(tag => (
-                                                                <span key={tag} className="pc-tag">{tag}</span>
-                                                            ))}
-                                                        </div>
-                                                        <h3 className="pc-title">{project.title}</h3>
-                                                        <p className="pc-desc">{project.desc}</p>
-                                                        <div className="pc-footer">
-                                                            <div className="pc-metrics">
-                                                                {project.metrics.slice(0, 2).map((m, i) => (
-                                                                    <div key={i} className="pcm-item">
-                                                                        <span className="pcm-val">{m.val}</span>
-                                                                        <span className="pcm-label">{m.label}</span>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div
+                                                className="project-card-click-area"
+                                                onClick={() => { setViewMode('desktop'); handleOpenWindow(originalIdx); }}
+                                            >
+                                                <ProjectCard project={project} />
                                             </div>
-                                            <a href={project.link} target="_blank" rel="noopener noreferrer" className="external-launch-link" onClick={(e) => e.stopPropagation()}>
-                                                <ExternalLink size={16} />
-                                            </a>
+                                            {project.link && (
+                                                <a
+                                                    href={project.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="external-launch-link"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    <ExternalLink size={16} />
+                                                </a>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <ProjectCard project={project} />
-                                    )}
-                                </div>
-                            ))}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
 
-                    {viewMode === 'desktop' && (
-                        window.innerWidth <= 768 ? (
-                            <div className="mobile-desktop-popup-overlay">
-                                <div className="mobile-popup-header">
-                                    <span className="popup-title">Project Desktop Environment</span>
-                                    <button className="popup-close-btn" onClick={() => setViewMode('grid')}>
-                                        <i className="fas fa-times"></i>
-                                    </button>
-                                </div>
-                                <div className="mobile-popup-body">
-                                    {renderDesktopContent()}
-                                </div>
-                            </div>
-                        ) : renderDesktopContent()
-                    )}
+                    {viewMode === 'desktop' && renderDesktopContent()}
                     {viewMode === 'comic' && renderComicContent()}
                 </div>
             </div>

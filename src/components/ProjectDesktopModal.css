@@ -1,0 +1,95 @@
+/* ProjectDesktopModal.css
+ * Self-contained styles for the mobile desktop view portal.
+ * Renders via React Portal on document.body — no parent transform issues.
+ */
+
+/* ── Overlay ── */
+.pdm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #050a14;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: pdm-enter 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes pdm-enter {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Viewport (Correctly-sized layout box) ── */
+.pdm-viewport {
+    /* Width = 100vw; height set by JS to match scaled content height */
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* ── Inner container — desktop OS at native 1200×675 ── */
+.pdm-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+/* ── Floating action bar at bottom ── */
+.pdm-fab-bar {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(10, 15, 30, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    padding: 6px 10px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.pdm-fab-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: rgba(226, 232, 240, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    padding: 0;
+}
+
+.pdm-fab-btn:active {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    transform: scale(0.9);
+}
+
+.pdm-fab-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0 4px;
+}
+
+.pdm-fab-close {
+    color: #ff5f57;
+}
+
+.pdm-fab-close:active {
+    background: rgba(255, 95, 87, 0.2);
+    color: #ff5f57;
+}
