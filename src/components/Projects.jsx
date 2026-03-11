@@ -296,17 +296,18 @@ export default function Projects() {
     const [minimizedWindows, setMinimizedWindows] = useState([]);
     const [monitorStatus, setMonitorStatus] = useState('on'); // 'on' | 'off' | 'booting' | 'shutting-down'
 
-    const handlePowerToggle = () => {
+    const handlePowerToggle = (e) => {
+        if (e) e.stopPropagation();
         if (monitorStatus === 'on') {
             setMonitorStatus('shutting-down');
             setTimeout(() => {
                 setMonitorStatus('off');
-            }, 1500);
+            }, 1000);
         } else if (monitorStatus === 'off') {
             setMonitorStatus('booting');
             setTimeout(() => {
                 setMonitorStatus('on');
-            }, 2500);
+            }, 1500);
         }
     };
 
@@ -365,29 +366,43 @@ export default function Projects() {
         if (activeWindow === idx) setActiveWindow(null);
     };
 
-    // Simple Dragging Logic for React
+    // Unified Dragging Logic for Mouse and Touch
     const startDrag = (e, idx) => {
-        const startX = e.clientX;
-        const startY = e.clientY;
-        const initialX = windowPositions[idx]?.x || 100;
-        const initialY = windowPositions[idx]?.y || 100;
+        const isTouch = e.type === 'touchstart';
+        const startX = isTouch ? e.touches[0].clientX : e.clientX;
+        const startY = isTouch ? e.touches[0].clientY : e.clientY;
+        const initialX = windowPositions[idx]?.x || 50;
+        const initialY = windowPositions[idx]?.y || 50;
 
-        const onMouseMove = (moveE) => {
-            const dx = moveE.clientX - startX;
-            const dy = moveE.clientY - startY;
+        const onMove = (moveE) => {
+            const currentX = isTouch ? moveE.touches[0].clientX : moveE.clientX;
+            const currentY = isTouch ? moveE.touches[0].clientY : moveE.clientY;
+            const dx = currentX - startX;
+            const dy = currentY - startY;
+
             setWindowPositions(prev => ({
                 ...prev,
                 [idx]: { x: initialX + dx, y: initialY + dy }
             }));
         };
 
-        const onMouseUp = () => {
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
+        const onEnd = () => {
+            if (isTouch) {
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            } else {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+            }
         };
 
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
+        if (isTouch) {
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('touchend', onEnd);
+        } else {
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onEnd);
+        }
         bringToFront(idx);
     };
 
@@ -780,7 +795,11 @@ export default function Projects() {
                                                 }}
                                                 onClick={() => bringToFront(id)}
                                             >
-                                                <div className="os-window-header" onMouseDown={(e) => startDrag(e, id)}>
+                                                <div 
+                                                    className="os-window-header" 
+                                                    onMouseDown={(e) => startDrag(e, id)}
+                                                    onTouchStart={(e) => startDrag(e, id)}
+                                                >
                                                     <div className="px-4 flex items-center gap-2 h-full">
                                                         {view === 'desc' && (
                                                             <button
@@ -802,7 +821,7 @@ export default function Projects() {
                                                         <div className="os-control-btn" onClick={(e) => handleMaximize(e, id)} title={maximizedWindows.includes(id) ? "Restore" : "Maximize"}>
                                                             <i className={`far ${maximizedWindows.includes(id) ? 'fa-clone' : 'fa-square'}`}></i>
                                                         </div>
-                                                        <div className="os-control-btn close" onClick={(e) => handleCloseWindow(e, id)} title="Close">
+                                                        <div className="os-control-btn close" onClick={(e) => handleCloseWindow(e, id)} onTouchEnd={(e) => handleCloseWindow(e, id)} title="Close">
                                                             <i className="fas fa-times"></i>
                                                         </div>
                                                     </div>
@@ -1006,9 +1025,10 @@ export default function Projects() {
                                                     </div>
                                                     <span className="user-name">Aekansh Khandelwal</span>
                                                 </div>
-                                                <button 
-                                                    className="start-power-btn" 
-                                                    onClick={() => { handlePowerToggle(); setShowStartMenu(false); }}
+                                                <button
+                                                    className="start-power-btn"
+                                                    onClick={(e) => { handlePowerToggle(e); setShowStartMenu(false); }}
+                                                    onTouchEnd={(e) => { handlePowerToggle(e); setShowStartMenu(false); }}
                                                     title="Power Options"
                                                 >
                                                     <i className="fas fa-power-off"></i>
@@ -1082,7 +1102,8 @@ export default function Projects() {
                             <div className={`monitor-status-light ${monitorStatus}`}></div>
                             <button
                                 className={`monitor-power-btn ${monitorStatus}`}
-                                onClick={handlePowerToggle}
+                                onClick={(e) => handlePowerToggle(e)}
+                                onTouchEnd={(e) => handlePowerToggle(e)}
                                 title={monitorStatus === 'on' ? "Power Off" : "Power On"}
                                 style={{ touchAction: 'manipulation', background: 'none', border: 'none', cursor: 'pointer' }}
                             >
@@ -1147,9 +1168,49 @@ export default function Projects() {
                                     onMouseEnter={(e) => e.currentTarget.classList.add('visible')}
                                 >
                                     {project.link ? (
-                                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-card-wrapper">
-                                            <ProjectCard project={project} />
-                                        </a>
+                                        <div className="project-card-wrapper">
+                                            <div className="project-card-click-area" onClick={() => { setViewMode('desktop'); handleOpenWindow(idx); }}>
+                                                <div className="project-card">
+                                                    <div className="card-glow" />
+                                                    <div className="pc-preview">
+                                                        <div className="preview-visual">
+                                                            {project.image && project.image.endsWith('.mp4') ? (
+                                                                <video src={project.image} autoPlay muted loop playsInline className="pc-image" />
+                                                            ) : project.image ? (
+                                                                <img src={project.image} alt={project.title} className="pc-image" />
+                                                            ) : (
+                                                                <div className="pc-image-placeholder"><Bot /></div>
+                                                            )}
+                                                        </div>
+                                                        <div className="preview-overlay">
+                                                            <div className="preview-text">BOOT_INTERACE.sys</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="pc-content">
+                                                        <div className="pc-tags">
+                                                            {project.tags.slice(0, 3).map(tag => (
+                                                                <span key={tag} className="pc-tag">{tag}</span>
+                                                            ))}
+                                                        </div>
+                                                        <h3 className="pc-title">{project.title}</h3>
+                                                        <p className="pc-desc">{project.desc}</p>
+                                                        <div className="pc-footer">
+                                                            <div className="pc-metrics">
+                                                                {project.metrics.slice(0, 2).map((m, i) => (
+                                                                    <div key={i} className="pcm-item">
+                                                                        <span className="pcm-val">{m.val}</span>
+                                                                        <span className="pcm-label">{m.label}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href={project.link} target="_blank" rel="noopener noreferrer" className="external-launch-link" onClick={(e) => e.stopPropagation()}>
+                                                <ExternalLink size={16} />
+                                            </a>
+                                        </div>
                                     ) : (
                                         <ProjectCard project={project} />
                                     )}
