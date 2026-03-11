@@ -292,33 +292,77 @@ export default function Projects() {
     const [windowPositions, setWindowPositions] = useState({}); // { [idx]: { x, y } }
     const [windowViews, setWindowViews] = useState({}); // { [idx]: 'folder' | 'desc' }
     const [windowZ, setWindowZ] = useState(100);
+    const [maximizedWindows, setMaximizedWindows] = useState([]);
+    const [minimizedWindows, setMinimizedWindows] = useState([]);
+    const [monitorStatus, setMonitorStatus] = useState('on'); // 'on' | 'off' | 'booting' | 'shutting-down'
+
+    const handlePowerToggle = () => {
+        if (monitorStatus === 'on') {
+            setMonitorStatus('shutting-down');
+            setTimeout(() => {
+                setMonitorStatus('off');
+            }, 1500);
+        } else if (monitorStatus === 'off') {
+            setMonitorStatus('booting');
+            setTimeout(() => {
+                setMonitorStatus('on');
+            }, 2500);
+        }
+    };
 
     const bringToFront = (idx) => {
         setActiveWindow(idx);
         setWindowZ(prev => prev + 1);
     };
 
+    const handleIconClick = (idx) => {
+        bringToFront(idx);
+        // On mobile, single click opens the window
+        if (window.innerWidth <= 768) {
+            handleOpenWindow(idx);
+        }
+    };
+
     const handleOpenWindow = (idx) => {
         if (!openWindows.includes(idx)) {
-            setOpenWindows([...openWindows, idx]);
+            setOpenWindows(prev => [...prev, idx]);
             // Initial position offset slightly for each window
             setWindowPositions(prev => ({
                 ...prev,
-                [idx]: { x: 100 + (openWindows.length * 30), y: 80 + (openWindows.length * 30) }
+                [idx]: { x: 50 + (openWindows.length * 20), y: 50 + (openWindows.length * 20) }
             }));
             setWindowViews(prev => ({ ...prev, [idx]: 'folder' }));
         }
+        setMinimizedWindows(prev => prev.filter(id => id !== idx));
         bringToFront(idx);
     };
 
     const handleCloseWindow = (e, idx) => {
         e.stopPropagation();
-        setOpenWindows(openWindows.filter(id => id !== idx));
+        setOpenWindows(prev => prev.filter(id => id !== idx));
+        setMaximizedWindows(prev => prev.filter(id => id !== idx));
+        setMinimizedWindows(prev => prev.filter(id => id !== idx));
         if (activeWindow === idx) setActiveWindow(null);
     };
 
     const toggleWindowView = (idx, view) => {
         setWindowViews(prev => ({ ...prev, [idx]: view }));
+    };
+
+    const handleMaximize = (e, idx) => {
+        e.stopPropagation();
+        setMaximizedWindows(prev =>
+            prev.includes(idx) ? prev.filter(id => id !== idx) : [...prev, idx]
+        );
+        bringToFront(idx);
+    };
+
+    const handleMinimize = (e, idx) => {
+        e.stopPropagation();
+        setMinimizedWindows(prev =>
+            prev.includes(idx) ? prev.filter(id => id !== idx) : [...prev, idx]
+        );
+        if (activeWindow === idx) setActiveWindow(null);
     };
 
     // Simple Dragging Logic for React
@@ -633,265 +677,413 @@ export default function Projects() {
                 <div className="monitor-container animate-monitor">
                     <div className="monitor-backglow"></div>
                     <div className="monitor-frame">
-                        <div className="monitor-screen">
-                            <div className="screen-reflection"></div>
-                            <div className="desktop-env win11 consolidated">
-                                <div className="os-desktop-workspace">
-                                    {/* Project Folders */}
-                                    {projects.map((project, idx) => (
+                        <div className={`monitor-screen ${monitorStatus}`}>
+                            {(monitorStatus === 'on' || monitorStatus === 'booting' || monitorStatus === 'shutting-down') && (
+                                <div className="screen-reflection"></div>
+                            )}
+
+                            {monitorStatus === 'booting' && (
+                                <div className="boot-screen">
+                                    <div className="boot-logo">
+                                        <svg viewBox="0 0 24 24" className="w-16 h-16 fill-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+                                            <path d="M0 0h11.4v11.4H0V0zm12.6 0H24v11.4H12.6V0zM0 12.6h11.4V24H0V12.6zm12.6 0H24V24H12.6V12.6z" />
+                                        </svg>
+                                    </div>
+                                    <div className="boot-loader">
+                                        <div className="loader-bar"></div>
+                                    </div>
+                                    <div className="boot-text">Welcome</div>
+                                </div>
+                            )}
+
+                            {monitorStatus === 'shutting-down' && (
+                                <div className="shutdown-screen">
+                                    <div className="shutdown-content">
+                                        <div className="shutdown-spinner"></div>
+                                        <div className="shutdown-text">Shutting Down</div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {monitorStatus === 'on' && (
+                                <div className="desktop-env win11 consolidated">
+                                    <div className="os-desktop-workspace">
+                                        {/* Project Folders */}
+                                        {projects.map((project, idx) => (
+                                            <div
+                                                key={idx}
+                                                className="os-icon-container"
+                                                onDoubleClick={() => handleOpenWindow(idx)}
+                                                onClick={() => handleIconClick(idx)}
+                                            >
+                                                <div className="os-folder-visual">
+                                                    <i className={`fas ${getIconForProject(project)}`}></i>
+                                                </div>
+                                                <span className="os-icon-label">{project.title}</span>
+                                            </div>
+                                        ))}
+
+                                        {/* About Me Folder */}
                                         <div
-                                            key={idx}
                                             className="os-icon-container"
-                                            onDoubleClick={() => handleOpenWindow(idx)}
-                                            onClick={() => bringToFront(idx)}
+                                            onDoubleClick={() => handleOpenWindow('about')}
+                                            onClick={() => handleIconClick('about')}
                                         >
-                                            <div className="os-folder-visual">
-                                                <i className={`fas ${getIconForProject(project)}`}></i>
+                                            <div className="os-folder-visual" style={{ background: '#ffd43b' }}>
+                                                <i className="fas fa-user" style={{ color: 'rgba(66, 32, 6, 0.4)' }}></i>
                                             </div>
-                                            <span className="os-icon-label">{project.title}</span>
-                                        </div>
-                                    ))}
-
-                                    {/* About Me Folder */}
-                                    <div
-                                        className="os-icon-container"
-                                        onDoubleClick={() => handleOpenWindow('about')}
-                                        onClick={() => bringToFront('about')}
-                                    >
-                                        <div className="os-folder-visual" style={{ background: '#ffd43b' }}>
-                                            <i className="fas fa-user" style={{ color: 'rgba(66, 32, 6, 0.4)' }}></i>
-                                        </div>
-                                        <span className="os-icon-label">My Profile</span>
-                                    </div>
-                                </div>
-
-                                {/* Render Open Windows */}
-                                {openWindows.map((id) => {
-                                    const isAbout = id === 'about';
-                                    const project = isAbout ? null : projects[id];
-                                    const pos = windowPositions[id] || { x: 100, y: 100 };
-                                    const view = windowViews[id] || 'folder';
-                                    const isActive = activeWindow === id;
-                                    const title = isAbout ? 'My Profile' : project.title;
-
-                                    return (
-                                        <div
-                                            key={id}
-                                            className="os-window-canvas"
-                                            style={{
-                                                left: pos.x,
-                                                top: pos.y,
-                                                zIndex: isActive ? windowZ : 100 + openWindows.indexOf(id),
-                                                display: 'flex'
-                                            }}
-                                            onClick={() => bringToFront(id)}
-                                        >
-                                            <div className="os-window-header" onMouseDown={(e) => startDrag(e, id)}>
-                                                <div className="px-4 flex items-center gap-2 h-full">
-                                                    {view === 'desc' && (
-                                                        <button
-                                                            onClick={(e) => { e.stopPropagation(); toggleWindowView(id, 'folder'); }}
-                                                            className="mr-2 text-slate-400 hover:text-blue-600 cursor-pointer"
-                                                        >
-                                                            <i className="fas fa-arrow-left text-xs"></i>
-                                                        </button>
-                                                    )}
-                                                    <i className="fas fa-folder text-yellow-500 text-xs"></i>
-                                                    <span className="text-[11px] font-semibold text-slate-300">
-                                                        {title}
-                                                    </span>
-                                                </div>
-                                                <div className="os-window-controls h-full">
-                                                    <div className="os-control-btn"><i className="fas fa-minus"></i></div>
-                                                    <div className="os-control-btn"><i className="far fa-square"></i></div>
-                                                    <div className="os-control-btn close" onClick={(e) => handleCloseWindow(e, id)}><i className="fas fa-times"></i></div>
-                                                </div>
-                                            </div>
-
-                                            {/* Windows Address Bar */}
-                                            <div className="os-address-bar">
-                                                <div className="os-nav-actions">
-                                                    <i className="fas fa-arrow-left" onClick={(e) => { e.stopPropagation(); toggleWindowView(id, 'folder'); }}></i>
-                                                    <i className="fas fa-arrow-right"></i>
-                                                    <i className="fas fa-arrow-up"></i>
-                                                    <i className="fas fa-redo"></i>
-                                                </div>
-                                                <div className="os-breadcrumb-bar">
-                                                    <i className="fas fa-desktop text-[10px]"></i>
-                                                    <span>This PC</span>
-                                                    <i className="fas fa-chevron-right text-[8px]"></i>
-                                                    <span>Projects</span>
-                                                    <i className="fas fa-chevron-right text-[8px]"></i>
-                                                    <span>{title}</span>
-                                                </div>
-                                                <div className="os-search-bar">
-                                                    <i className="fas fa-search"></i>
-                                                    <span>Search {title}</span>
-                                                </div>
-                                            </div>
-
-                                            {view === 'folder' ? (
-                                                <div className="os-file-explorer">
-                                                    {isAbout ? (
-                                                        <>
-                                                            <div className="os-file-item" onClick={() => toggleWindowView(id, 'desc')}>
-                                                                <i className="fas fa-id-card text-blue-400"></i>
-                                                                <span className="os-file-name">Bio.html</span>
-                                                            </div>
-                                                            <div className="os-file-item" onClick={() => window.location.href = '#contact'}>
-                                                                <i className="fas fa-envelope text-amber-400"></i>
-                                                                <span className="os-file-name">Contact.lnk</span>
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <div className="os-file-item" onClick={() => toggleWindowView(id, 'desc')}>
-                                                                <i className="fas fa-file-alt text-blue-400"></i>
-                                                                <span className="os-file-name">Description.txt</span>
-                                                            </div>
-                                                            <a href={project.link} target="_blank" rel="noopener noreferrer" className="os-file-item" onClick={(e) => e.stopPropagation()}>
-                                                                <i className="fas fa-external-link-alt text-emerald-400"></i>
-                                                                <span className="os-file-name">Launch_App.exe</span>
-                                                            </a>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <div className="os-txt-content window-content">
-                                                    {isAbout ? (
-                                                        <div className="text-center">
-                                                            <img src="https://ui-avatars.com/api/?name=Portfolio+User&background=0f172a&color=fff" className="w-16 h-16 rounded-full mx-auto mb-4 border-white/10" alt="Avatar" />
-                                                            <h3 className="font-bold text-white">Aekansh Khandelwal</h3>
-                                                            <p className="text-slate-400 text-xs mt-2">I build digital experiences that live on the web.</p>
-                                                        </div>
-                                                    ) : (
-                                                        <>
-                                                            <h2 className="gradient-text text-xl font-bold mb-4">{project.title}</h2>
-                                                            <p className="text-slate-400 text-sm leading-relaxed mb-6">{project.desc}</p>
-                                                            <div className="mb-4">
-                                                                <h4 className="text-[10px] font-bold text-slate-500 uppercase mb-2">Key Highlights:</h4>
-                                                                <ul className="text-xs text-slate-400 space-y-1">
-                                                                    {project.bullets.map((b, i) => <li key={i}>• {b}</li>)}
-                                                                </ul>
-                                                            </div>
-                                                            <div className="flex gap-2 flex-wrap">
-                                                                {project.tags.map((tag, i) => (
-                                                                    <span key={i} className="px-2 py-1 bg-white/5 text-[10px] rounded text-slate-400 border border-white/5">{tag}</span>
-                                                                ))}
-                                                            </div>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-
-                                {/* Start Menu Popup */}
-                                {showStartMenu && (
-                                    <div className="os-start-menu">
-                                        <div className="start-search">
-                                            <i className="fas fa-search search-icon"></i>
-                                            <input type="text" placeholder="Type to search..." autoFocus />
-                                        </div>
-
-                                        <div className="p-5 pb-2">
-
-                                            <div className="grid grid-cols-5 gap-2">
-                                                <div className="start-app-item" onClick={() => { handleOpenWindow('about'); setShowStartMenu(false); }}>
-                                                    <div className="start-app-icon bg-blue-500/20"><i className="fas fa-user text-blue-400"></i></div>
-                                                    <span>Profile</span>
-                                                </div>
-                                                {projects.slice(0, 4).map((p, i) => (
-                                                    <div key={i} className="start-app-item" onClick={() => { handleOpenWindow(i); setShowStartMenu(false); }}>
-                                                        <div className="start-app-icon bg-yellow-500/20"><i className={`fas ${getIconForProject(p)} text-yellow-500`}></i></div>
-                                                        <span>{p.title.split(' ')[0]}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-
-                                            <div className="mt-5 mb-3">
-                                                <span className="text-xs font-bold text-white">Recommended</span>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-3">
-                                                {projects.slice(0, 4).map((p, i) => (
-                                                    <div key={i} className="rec-item" onClick={() => { handleOpenWindow(i); setShowStartMenu(false); }}>
-                                                        <i className={`fas ${getIconForProject(p)} text-yellow-500 text-xs`}></i>
-                                                        <div className="flex flex-col">
-                                                            <span className="text-[10px] font-medium text-white">{p.title}</span>
-                                                            <span className="text-[9px] text-slate-400">Recently added</span>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div className="os-start-footer">
-                                            <div className="flex items-center gap-3">
-                                                <img src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" className="w-8 h-8 rounded-full border border-white/10" alt="User" />
-                                                <span className="text-xs font-semibold text-white">Aekansh</span>
-                                            </div>
-                                            <i className="fas fa-power-off text-slate-400 hover:text-red-400 cursor-pointer"></i>
+                                            <span className="os-icon-label">My Profile</span>
                                         </div>
                                     </div>
-                                )}
 
-                                {/* Taskbar */}
-                                <div className="os-taskbar-glass" onClick={() => showStartMenu && setShowStartMenu(false)}>
-                                    {/* Centered App Group */}
-                                    <div className="os-taskbar-apps">
-                                        <div
-                                            className={`os-taskbar-item ${showStartMenu ? 'active' : ''}`}
-                                            onClick={(e) => { e.stopPropagation(); setShowStartMenu(!showStartMenu); }}
-                                            title="Start"
-                                        >
-                                            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-blue-500" style={{ width: '24px', height: '24px' }} fill="#3b82f6">
-                                                <path d="M0 0h11.4v11.4H0V0zm12.6 0H24v11.4H12.6V0zM0 12.6h11.4V24H0V12.6zm12.6 0H24V24H12.6V12.6z" />
-                                            </svg>
-                                        </div>
+                                    {/* Render Open Windows */}
+                                    {openWindows.map((id) => {
+                                        const isAbout = id === 'about';
+                                        const isSkills = id === 'skills';
+                                        const isEdu = id === 'education';
+                                        const isSys = id === 'about_sys';
+                                        const isSystem = isAbout || isSkills || isEdu || isSys;
+                                        
+                                        const project = isSystem ? null : projects[id];
+                                        const pos = windowPositions[id] || { x: 100, y: 100 };
+                                        const view = windowViews[id] || 'folder';
+                                        const isActive = activeWindow === id;
+                                        
+                                        let title = project?.title || 'System Window';
+                                        if (isAbout) title = 'My Profile';
+                                        if (isSkills) title = 'Technical Skills';
+                                        if (isEdu) title = 'Academic History';
+                                        if (isSys) title = 'About System';
 
-                                        <div className="os-taskbar-item text-slate-400" title="Search">
-                                            <i className="fas fa-search text-lg"></i>
-                                        </div>
+                                        const isMaximized = maximizedWindows.includes(id);
+                                        const isMinimized = minimizedWindows.includes(id);
 
-                                        <div className="w-px h-6 bg-white/10 mx-1"></div>
+                                        if (isMinimized) return null;
 
-                                        {openWindows.map(id => {
-                                            const isAbout = id === 'about';
-                                            const project = isAbout ? null : projects[id];
-                                            const icon = isAbout ? 'fa-user-circle' : getIconForProject(project);
-                                            const iconColor = isAbout ? 'text-slate-300' : 'text-yellow-500';
+                                        return (
+                                            <div
+                                                key={id}
+                                                className={`os-window-canvas ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''}`}
+                                                style={isMaximized ? {
+                                                    left: 0,
+                                                    top: 0,
+                                                    width: '100%',
+                                                    height: 'calc(100% - 48px)',
+                                                    zIndex: isActive ? windowZ : 100 + openWindows.indexOf(id),
+                                                    borderRadius: 0,
+                                                    display: 'flex'
+                                                } : {
+                                                    left: pos.x,
+                                                    top: pos.y,
+                                                    zIndex: isActive ? windowZ : 100 + openWindows.indexOf(id),
+                                                    display: 'flex'
+                                                }}
+                                                onClick={() => bringToFront(id)}
+                                            >
+                                                <div className="os-window-header" onMouseDown={(e) => startDrag(e, id)}>
+                                                    <div className="px-4 flex items-center gap-2 h-full">
+                                                        {view === 'desc' && (
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); toggleWindowView(id, 'folder'); }}
+                                                                className="mr-2 text-slate-400 hover:text-blue-600 cursor-pointer"
+                                                            >
+                                                                <i className="fas fa-arrow-left text-xs"></i>
+                                                            </button>
+                                                        )}
+                                                        <i className="fas fa-folder text-yellow-500 text-xs"></i>
+                                                        <span className="text-[11px] font-semibold text-slate-300">
+                                                            {title}
+                                                        </span>
+                                                    </div>
+                                                    <div className="os-window-controls h-full">
+                                                        <div className="os-control-btn" onClick={(e) => handleMinimize(e, id)} title="Minimize">
+                                                            <i className="fas fa-minus"></i>
+                                                        </div>
+                                                        <div className="os-control-btn" onClick={(e) => handleMaximize(e, id)} title={maximizedWindows.includes(id) ? "Restore" : "Maximize"}>
+                                                            <i className={`far ${maximizedWindows.includes(id) ? 'fa-clone' : 'fa-square'}`}></i>
+                                                        </div>
+                                                        <div className="os-control-btn close" onClick={(e) => handleCloseWindow(e, id)} title="Close">
+                                                            <i className="fas fa-times"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                            return (
-                                                <div
-                                                    key={id}
-                                                    className={`os-taskbar-item ${activeWindow === id ? 'active' : ''}`}
-                                                    onClick={() => bringToFront(id)}
-                                                    title={isAbout ? 'My Profile' : projects[id].title}
+                                                {/* Windows Address Bar */}
+                                                <div className="os-address-bar">
+                                                    <div className="os-nav-actions">
+                                                        <i className="fas fa-arrow-left" onClick={(e) => { e.stopPropagation(); toggleWindowView(id, 'folder'); }}></i>
+                                                        <i className="fas fa-arrow-right"></i>
+                                                        <i className="fas fa-arrow-up"></i>
+                                                        <i className="fas fa-redo"></i>
+                                                    </div>
+                                                    <div className="os-breadcrumb-bar">
+                                                        <i className="fas fa-desktop text-[10px]"></i>
+                                                        <span>This PC</span>
+                                                        <i className="fas fa-chevron-right text-[8px]"></i>
+                                                        <span>Projects</span>
+                                                        <i className="fas fa-chevron-right text-[8px]"></i>
+                                                        <span>{title}</span>
+                                                    </div>
+                                                    <div className="os-search-bar">
+                                                        <i className="fas fa-search"></i>
+                                                        <span>Search {title}</span>
+                                                    </div>
+                                                </div>
+
+                                                {view === 'folder' ? (
+                                                    <div className="os-file-explorer">
+                                                        {isSystem ? (
+                                                            <>
+                                                                <div className="os-file-item" onClick={() => toggleWindowView(id, 'desc')}>
+                                                                    <i className={`fas ${isAbout ? 'fa-id-card' : isSkills ? 'fa-terminal' : isEdu ? 'fa-certificate' : 'fa-cog'} text-blue-400`}></i>
+                                                                    <span className="os-file-name">{isAbout ? 'Bio.html' : isSkills ? 'Skills.exe' : isEdu ? 'Degree.pdf' : 'Info.sys'}</span>
+                                                                </div>
+                                                                <div className="os-file-item" onClick={() => window.location.href = '#contact'}>
+                                                                    <i className="fas fa-envelope text-amber-400"></i>
+                                                                    <span className="os-file-name">Contact.lnk</span>
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <div className="os-file-item" onClick={() => toggleWindowView(id, 'desc')}>
+                                                                    <i className="fas fa-file-alt text-blue-400"></i>
+                                                                    <span className="os-file-name">Description.txt</span>
+                                                                </div>
+                                                                <a href={project.link} target="_blank" rel="noopener noreferrer" className="os-file-item" onClick={(e) => e.stopPropagation()}>
+                                                                    <i className="fas fa-external-link-alt text-emerald-400"></i>
+                                                                    <span className="os-file-name">Launch_App.exe</span>
+                                                                </a>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <div className="os-txt-content window-content">
+                                                        {isSystem ? (
+                                                            <div className="text-center py-4">
+                                                                {isAbout && (
+                                                                    <>
+                                                                        <img src="https://ui-avatars.com/api/?name=Aekansh+Khandelwal&background=020617&color=fff" className="w-16 h-16 rounded-full mx-auto mb-4 border border-white/10" alt="Avatar" />
+                                                                        <h3 className="font-bold text-white text-lg">Aekansh Khandelwal</h3>
+                                                                        <p className="text-slate-400 text-sm mt-2 max-w-sm mx-auto">Full Stack Developer & AI Enthusiast. Building high-performance, intelligent web applications with a focus on seamless user experiences.</p>
+                                                                    </>
+                                                                )}
+                                                                {isSkills && (
+                                                                    <div className="grid grid-cols-2 gap-4 text-left px-8">
+                                                                        <div>
+                                                                            <h4 className="text-blue-400 font-bold mb-2 text-xs uppercase tracking-wider">Frontend</h4>
+                                                                            <ul className="text-xs text-slate-300 space-y-1">
+                                                                                <li>React / Next.js</li>
+                                                                                <li>TypeScript</li>
+                                                                                <li>Tailwind CSS</li>
+                                                                            </ul>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h4 className="text-purple-400 font-bold mb-2 text-xs uppercase tracking-wider">Backend</h4>
+                                                                            <ul className="text-xs text-slate-300 space-y-1">
+                                                                                <li>Node.js / Express</li>
+                                                                                <li>Python / Django</li>
+                                                                                <li>PostgreSQL</li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                                {isEdu && (
+                                                                    <div className="text-left px-8">
+                                                                        <div className="mb-4">
+                                                                            <h4 className="text-emerald-400 font-bold text-xs uppercase tracking-wider">Bachelor of Science</h4>
+                                                                            <p className="text-white text-sm">Computer Science & Engineering</p>
+                                                                            <p className="text-slate-500 text-[10px]">2020 — 2024</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h4 className="text-amber-400 font-bold text-xs uppercase tracking-wider">Certifications</h4>
+                                                                            <p className="text-white text-sm">Advanced Machine Learning (Coursera)</p>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                                {isSys && (
+                                                                    <div className="text-xs text-slate-400 space-y-4 px-8">
+                                                                        <div className="p-3 bg-white/5 rounded-lg border border-white/5">
+                                                                            <p className="text-white font-bold mb-1">Portfolio OS v1.2</p>
+                                                                            <p>Built with React & Vite</p>
+                                                                        </div>
+                                                                        <p>"The only way to do great work is to love what you do."</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                <h2 className="gradient-text text-xl font-bold mb-4">{project.title}</h2>
+                                                                <p className="text-slate-400 text-sm leading-relaxed mb-6">{project.desc}</p>
+                                                                <div className="mb-4">
+                                                                    <h4 className="text-[10px] font-bold text-slate-500 uppercase mb-2">Key Highlights:</h4>
+                                                                    <ul className="text-xs text-slate-400 space-y-1">
+                                                                        {project.bullets.map((b, i) => <li key={i}>• {b}</li>)}
+                                                                    </ul>
+                                                                </div>
+                                                                <div className="flex gap-2 flex-wrap">
+                                                                    {project.tags.map((tag, i) => (
+                                                                        <span key={i} className="px-2 py-1 bg-white/5 text-[10px] rounded text-slate-400 border border-white/5">{tag}</span>
+                                                                    ))}
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+
+                                    {/* Start Menu Popup */}
+                                    {showStartMenu && (
+                                        <div className="os-start-menu">
+                                            <div className="start-search">
+                                                <i className="fas fa-search search-icon"></i>
+                                                <input type="text" placeholder="Type to search..." autoFocus />
+                                            </div>
+
+                                            <div className="os-start-content scrollbar-hide">
+                                                {/* Pinned Section */}
+                                                <div className="start-section">
+                                                    <div className="start-section-header">
+                                                        <span>Pinned</span>
+                                                        <button className="start-all-apps">All apps <i className="fas fa-chevron-right text-[8px]"></i></button>
+                                                    </div>
+                                                    <div className="os-start-apps-grid">
+                                                        <div className="start-app-item" onClick={() => { handleOpenWindow('about'); setShowStartMenu(false); }}>
+                                                            <div className="start-app-icon bg-blue-500/20"><i className="fas fa-user text-blue-400"></i></div>
+                                                            <span>Profile</span>
+                                                        </div>
+                                                        <div className="start-app-item" onClick={() => { handleOpenWindow('skills'); setShowStartMenu(false); }}>
+                                                            <div className="start-app-icon bg-purple-500/20"><i className="fas fa-code text-purple-400"></i></div>
+                                                            <span>Skills</span>
+                                                        </div>
+                                                        <div className="start-app-item" onClick={() => { handleOpenWindow('about_sys'); setShowStartMenu(false); }}>
+                                                            <div className="start-app-icon bg-slate-500/20"><i className="fas fa-info-circle text-slate-300"></i></div>
+                                                            <span>About</span>
+                                                        </div>
+                                                        <div className="start-app-item" onClick={() => { handleOpenWindow('education'); setShowStartMenu(false); }}>
+                                                            <div className="start-app-icon bg-emerald-500/20"><i className="fas fa-graduation-cap text-emerald-400"></i></div>
+                                                            <span>Education</span>
+                                                        </div>
+                                                        {projects.slice(0, 8).map((p, i) => (
+                                                            <div key={i} className="start-app-item" onClick={() => { handleOpenWindow(i); setShowStartMenu(false); }}>
+                                                                <div className="start-app-icon bg-yellow-500/20"><i className={`fas ${getIconForProject(p)} text-yellow-500`}></i></div>
+                                                                <span>{p.title.split(' ')[0]}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Recommended Section */}
+                                                <div className="start-section mt-4">
+                                                    <div className="start-section-header">
+                                                        <span>Recommended</span>
+                                                    </div>
+                                                    <div className="start-recommended-list">
+                                                        <div className="rec-item" onClick={() => window.open('https://github.com/aekanshkhandelwal', '_blank')}>
+                                                            <div className="rec-icon bg-emerald-500/20"><i className="fab fa-github text-emerald-400"></i></div>
+                                                            <div className="rec-info">
+                                                                <p className="rec-name">Portfolio Source</p>
+                                                                <p className="rec-date">Recently updated</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="rec-item">
+                                                            <div className="rec-icon bg-amber-500/20"><i className="fas fa-file-pdf text-amber-400"></i></div>
+                                                            <div className="rec-info">
+                                                                <p className="rec-name">Resume_Final_2024.pdf</p>
+                                                                <p className="rec-date">10m ago</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Start Footer */}
+                                            <div className="os-start-footer">
+                                                <div className="start-user">
+                                                    <div className="user-avatar">
+                                                        <i className="fas fa-user-circle"></i>
+                                                    </div>
+                                                    <span className="user-name">Aekansh Khandelwal</span>
+                                                </div>
+                                                <button 
+                                                    className="start-power-btn" 
+                                                    onClick={() => { handlePowerToggle(); setShowStartMenu(false); }}
+                                                    title="Power Options"
                                                 >
-                                                    <i className={`fas ${icon} ${iconColor} text-lg`}></i>
-                                                    <div className="os-dot-indicator" style={{ display: 'block' }}></div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
+                                                    <i className="fas fa-power-off"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
 
-                                    <div className="os-taskbar-tray" onClick={(e) => e.stopPropagation()}>
-                                        <div className="os-tray-icons">
-                                            <i className="fas fa-chevron-up text-[10px]"></i>
-                                            <i className="fas fa-wifi"></i>
-                                            <i className="fas fa-volume-up"></i>
-                                            <i className="fas fa-battery-three-quarters"></i>
+                                    {/* Taskbar */}
+                                    <div className="os-taskbar-glass" onClick={() => showStartMenu && setShowStartMenu(false)}>
+                                        {/* Centered App Group */}
+                                        <div className="os-taskbar-apps">
+                                            <div
+                                                className={`os-taskbar-item start-btn ${showStartMenu ? 'active' : ''}`}
+                                                onClick={(e) => { e.stopPropagation(); setShowStartMenu(s => !s); }}
+                                                onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); setShowStartMenu(s => !s); }}
+                                                title="Start"
+                                                style={{ touchAction: 'manipulation' }}
+                                            >
+                                                <svg viewBox="0 0 24 24" style={{ width: '14px', height: '14px', fill: '#3b82f6' }}>
+                                                    <path d="M0 0h11.4v11.4H0V0zm12.6 0H24v11.4H12.6V0zM0 12.6h11.4V24H0V12.6zm12.6 0H24V24H12.6V12.6z" />
+                                                </svg>
+                                            </div>
+
+                                            <div className="os-taskbar-item text-slate-400" title="Search">
+                                                <i className="fas fa-search text-lg"></i>
+                                            </div>
+
+                                            <div className="w-px h-6 bg-white/10 mx-1"></div>
+
+                                            {openWindows.map(id => {
+                                                const isAbout = id === 'about';
+                                                const project = isAbout ? null : projects[id];
+                                                const icon = isAbout ? 'fa-user-circle' : getIconForProject(project);
+                                                const iconColor = isAbout ? 'text-slate-300' : 'text-yellow-500';
+
+                                                return (
+                                                    <div
+                                                        key={id}
+                                                        className={`os-taskbar-item ${activeWindow === id ? 'active' : ''}`}
+                                                        onClick={() => bringToFront(id)}
+                                                        title={isAbout ? 'My Profile' : projects[id].title}
+                                                    >
+                                                        <i className={`fas ${icon} ${iconColor} text-lg`}></i>
+                                                        <div className="os-dot-indicator" style={{ display: 'block' }}></div>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
-                                        <div className="os-tray-time">
-                                            <span>{time}</span>
-                                            <span>{date}</span>
-                                        </div>
-                                        <div className="os-taskbar-tray-btn">
-                                            <i className="far fa-bell text-slate-400"></i>
+
+                                        <div className="os-taskbar-tray" onClick={(e) => e.stopPropagation()}>
+                                            <div className="os-tray-icons">
+                                                <i className="fas fa-chevron-up text-[10px]"></i>
+                                                <i className="fas fa-wifi"></i>
+                                                <i className="fas fa-volume-up"></i>
+                                                <i className="fas fa-battery-three-quarters"></i>
+                                                <i className="far fa-bell"></i>
+                                            </div>
+                                            <div className="os-tray-time">
+                                                <span>{time}</span>
+                                                <span>{date}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            )}
+                        </div>
+                        <div className="monitor-hardware-ui">
+                            <div className={`monitor-status-light ${monitorStatus}`}></div>
+                            <div
+                                className={`monitor-power-btn ${monitorStatus}`}
+                                onClick={handlePowerToggle}
+                                title={monitorStatus === 'on' ? "Power Off" : "Power On"}
+                            >
+                                <i className="fas fa-power-off"></i>
                             </div>
                         </div>
                         <div className="monitor-brand">PORTFOLIO OS</div>
@@ -915,6 +1107,7 @@ export default function Projects() {
                             <h2 className="section-title">
                                 Featured <span className="gradient-text">Projects</span>
                             </h2>
+                            <p className="section-subtitle reveal">Tactical Blueprint & Mission Briefings</p>
                         </div>
                         <div className="view-switcher">
                             {[

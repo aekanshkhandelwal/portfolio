@@ -65,7 +65,7 @@ export default function Navbar() {
     const toggleMenu = () => setIsOpen(!isOpen)
 
     return (
-        <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${!visible ? 'hidden' : ''} ${isOpen ? 'menu-open' : ''}`}>
+        <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${isOpen ? 'menu-open' : ''}`}>
             <div className="nav-inner">
                 <a href="#hero" className="nav-logo" onClick={scrollToTop}>
                     AK
