@@ -29,12 +29,14 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
   overflow-x: hidden;
+  width: 100%;
   position: relative;
 }
 
@@ -51,11 +53,10 @@ ul {
 .page {
   width: 100%;
   max-width: 1440px;
-  /* Standardized container width */
   margin: 0 auto;
   position: relative;
   background: transparent;
-  /* Ensure fixed children also respect the max-width if they are inside .page */
+  overflow-x: hidden;
 }
 
 /* ── Shared Utilities ── */

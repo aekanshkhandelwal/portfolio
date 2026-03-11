@@ -710,6 +710,12 @@
     }
 }
 
+/* ── Data Stream Overflow Protection ── */
+.hero-data-stream {
+    overflow: hidden;
+}
+
+/* Responsive Scaling for Buttons - CAREFULLY ORDERED CASCADE (Large to Small) */
 @media (max-width: 1024px) {
     .hero {
         padding: 160px 0 100px;
@@ -733,15 +739,33 @@
     .hero-actions {
         justify-content: center;
         gap: 8px;
-        flex-wrap: nowrap;
+        flex-wrap: nowrap; /* Keep nowrap for tablets/large mobile if space allows, but overridden for < 768px */
         overflow-x: visible;
         width: 100%;
     }
 
-    .hero-actions .btn {
+    .hero-actions .cssbuttons-io {
         padding: 4px 8px;
-        font-size: 0.7rem;
+        font-size: 14px;
         flex-shrink: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-actions {
+        flex-wrap: wrap !important; /* Force wrap on mobile to prevent overflow */
+        justify-content: center;
+    }
+
+    .hero-actions .cssbuttons-io {
+        font-size: 13px;
+        width: 100%; /* Full width buttons stack better */
+        justify-content: center;
+    }
+
+    .hero-actions .cssbuttons-io span {
+        justify-content: center;
+        width: 100%;
     }
 }
 
@@ -750,7 +774,7 @@
         gap: 5px;
     }
 
-    .hero-actions .btn {
+    .hero-actions .cssbuttons-io {
         padding: 6px 10px;
         font-size: 0.72rem;
     }
