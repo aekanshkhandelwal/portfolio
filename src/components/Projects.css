@@ -1883,48 +1883,48 @@
 @media (max-width: 768px) {
     .os-desktop-workspace {
         padding: 12px 6px 24px 6px;
-        gap: 4px;
+        gap: 6px; /* Slightly larger gap */
         display: grid !important;
-        grid-template-rows: repeat(6, 34px); /* Increased height for clearer separation */
+        grid-template-rows: repeat(6, 40px); /* Larger presentable rows for 500-768px */
         grid-auto-flow: column;
-        grid-auto-columns: 52px; /* Wider columns for labels */
+        grid-auto-columns: 56px; /* Larger presentable columns */
         align-content: start;
         justify-content: start;
         flex-direction: unset;
         flex-wrap: unset;
-        overflow-x: auto; /* Allow horizontal scroll if columns exceed 2-3 */
+        overflow-x: auto;
     }
 
     .os-icon-container {
         width: 100%;
         height: 100%;
-        padding: 1px 2px;
+        padding: 2px;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
-        gap: 1.5px; /* Tighter gap between icon and text */
+        gap: 2px;
     }
 
     .os-folder-visual {
-        width: 10px; /* Shrunk as requested */
-        height: 7px;
-        margin-bottom: 1px;
-        box-shadow: 0 0.5px 1px rgba(0,0,0,0.5);
+        width: 22px; /* Increased from 18px */
+        height: 16px;
+        margin-bottom: 2px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.4);
     }
 
     .os-folder-visual::before {
-        top: -1.5px;
-        width: 4px;
-        height: 1.5px;
+        top: -3px;
+        width: 9px;
+        height: 3px;
     }
 
     .os-folder-visual::after {
-        top: 0.5px;
-        left: 1px;
-        right: 1px;
-        height: 3px;
-        transform: translateY(-0.5px);
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        height: 6px;
+        transform: translateY(-2px);
     }
 
     .os-folder-visual i {
@@ -1933,8 +1933,8 @@
 
     .os-icon-label {
         display: block;
-        font-size: 3.5px;
-        max-width: 48px; /* Slightly wider to match column increase */
+        font-size: 5px; /* Reduced from 6px */
+        max-width: 52px;
         white-space: wrap;
         line-break: anywhere;
         display: -webkit-box;
@@ -2052,58 +2052,65 @@
 
     /* === Window Header === */
     .os-window-header {
-        height: 20px !important;
-        padding: 0 4px !important;
-        gap: 4px !important;
+        height: 24px !important; /* Slightly taller for balance */
+        padding: 0 6px !important;
+        gap: 6px !important;
+        align-items: center !important;
     }
 
-    .os-window-title {
-        font-size: 8px !important;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 60% !important;
+    .os-window-title-area {
+        padding-left: 8px !important; /* Override px-4 for mobile balance */
+        padding-right: 8px !important;
+        font-size: 8.5px !important;
+        font-weight: 500 !important;
+        gap: 3px !important; /* Tighter gap than gap-2 */
+        display: flex !important;
+        align-items: center !important;
+        flex: 1 !important;
+        width: auto !important;
+    }
+
+    .os-window-title-area span {
+        font-size: 8.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 140px !important; /* Prevent title from taking too much space */
     }
 
     .os-window-title-icon {
-        width: 10px !important;
-        height: 10px !important;
-        font-size: 8px !important;
+        width: 12px !important;
+        height: 12px !important;
+        font-size: 10px !important;
+        flex-shrink: 0 !important;
     }
 
     .os-control-btn {
-        width: 20px !important;
-        height: 20px !important;
-        font-size: 8px !important;
-        padding: 0 !important;
-    }
-
-    .os-control-btn svg,
-    .os-control-btn i {
-        width: 8px !important;
-        height: 8px !important;
-        font-size: 8px !important;
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 9px !important;
     }
 
     /* === Address Bar === */
     .os-address-bar {
-        height: 18px !important;
+        height: 22px !important;
         padding: 0 4px !important;
-        gap: 3px !important;
-        font-size: 7px !important;
+        gap: 4px !important;
+        font-size: 8px !important;
+        overflow: hidden !important;
     }
 
-    .os-address-bar svg,
-    .os-address-bar i {
-        width: 8px !important;
-        height: 8px !important;
-        font-size: 8px !important;
+    .os-address-bar .search-container {
+        display: none !important; /* Hide search on mobile header to save space — user can usually find search in other apps */
     }
 
     .os-breadcrumb-bar {
-        height: 14px !important;
-        font-size: 6px !important;
-        padding: 0 4px !important;
+        height: 18px !important;
+        font-size: 7px !important;
+        padding: 0 6px !important;
+        overflow-x: auto !important; /* Allow scroll for long paths */
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch;
     }
 
     /* === File Explorer === */
@@ -2122,10 +2129,10 @@
     }
 
     .os-file-item {
-        padding: 4px 6px !important;
-        font-size: 7px !important;
-        gap: 4px !important;
-        border-radius: 4px !important;
+        padding: 2px 4px !important;
+        font-size: 6.5px !important;
+        gap: 3px !important;
+        border-radius: 3px !important;
     }
 
     .os-file-item svg,
@@ -2299,58 +2306,71 @@
 
 @media (max-width: 500px) {
     .os-desktop-workspace {
-        padding: 6px 4px 36px 4px;
-    }
-
-    .os-icon-container {
-        width: 52px;
-        height: 56px;
+        grid-template-rows: repeat(6, 28px); /* Abstract miniaturized rows for sub-500px */
+        grid-auto-columns: 44px; /* Abstract miniaturized columns */
     }
 
     .os-folder-visual {
-        width: 28px;
-        height: 22px;
+        width: 14px !important; /* Increased from 10px */
+        height: 10px !important;
+    }
+
+    .os-folder-visual::before {
+        top: -1.5px !important;
+        width: 5px !important;
+        height: 1.5px !important;
+    }
+
+    .os-folder-visual::after {
+        top: 0.5px !important;
+        height: 4px !important;
     }
 
     .os-icon-label {
-        font-size: 7px;
-        max-width: 48px;
+        font-size: 3px !important; /* Reduced from 3.5px */
+        max-width: 40px !important;
+        line-height: 1 !important;
     }
 
     .os-taskbar-glass {
-        height: 26px !important;
+        height: 20px !important;
+        justify-content: center !important; /* Solid centering for mobile */
         padding: 0 4px !important;
-        justify-content: space-between !important;
-    }
-
-    /* Hide non-essential icons on mobile */
-    .os-taskbar-item[title="Search"],
-    .os-tray-icons .fa-chevron-up {
-        display: none !important;
     }
 
     .os-taskbar-apps {
-        justify-content: flex-start !important;
-        gap: 0px !important; /* Tightest gap */
-    }
-
-    .os-taskbar-apps .w-px {
-        display: none !important;
-    }
-
-    .os-taskbar-item {
-        width: 20px !important;
-        height: 20px !important;
-        padding: 0 !important;
-    }
-
-    .os-taskbar-item.start-btn svg {
-        width: 10px !important;
-        height: 10px !important;
+        justify-content: center !important;
+        gap: 2px !important;
     }
 
     .os-taskbar-item i {
         font-size: 10px !important;
+    }
+
+    /* Further shrink window elements for tiny screens */
+    .os-window-header {
+        height: 20px !important;
+        gap: 4px !important;
+    }
+
+    .os-window-title-area {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+        gap: 2px !important;
+    }
+
+    .os-window-title-area span {
+        font-size: 7.5px !important;
+        max-width: 90px !important;
+    }
+
+    .os-address-bar {
+        height: 20px !important;
+    }
+
+    .os-breadcrumb-bar {
+        font-size: 6.5px !important;
+        height: 16px !important;
     }
 
     .os-taskbar-tray {

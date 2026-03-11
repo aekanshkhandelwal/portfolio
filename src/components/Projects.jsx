@@ -825,7 +825,7 @@ export default function Projects() {
                                                     onMouseDown={(e) => startDrag(e, id)}
                                                     onTouchStart={(e) => startDrag(e, id)}
                                                 >
-                                                    <div className="px-4 flex items-center gap-2 h-full">
+                                                    <div className="os-window-title-area px-4 flex items-center gap-2 h-full">
                                                         {view === 'desc' && (
                                                             <button
                                                                 onClick={(e) => { e.stopPropagation(); toggleWindowView(id, 'folder'); }}
