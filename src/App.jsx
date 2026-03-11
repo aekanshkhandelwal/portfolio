@@ -3,6 +3,8 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import AmbientBackground from './components/AmbientBackground'
 import IntroScreen from './components/IntroScreen'
+import NavigationChannel from './components/NavigationChannel'
+
 
 // Lazy-load all below-the-fold sections so they don't block the initial render
 const About = lazy(() => import('./components/About'))
@@ -36,8 +38,10 @@ function App() {
           intro-complete class triggers staggered CSS animations on hero elements. */}
       <div className={`site-content${introComplete ? ' intro-complete' : ''}`}>
         <AmbientBackground />
+        <NavigationChannel />
         <div className="page">
           <Navbar />
+
           <main>
             {/* Hero loads immediately — it is above the fold */}
             <Hero />
