@@ -298,3 +298,43 @@
         filter: blur(0);
     }
 }
+
+/* ── Mobile Overrides ── */
+@media (max-width: 768px) {
+    .intro-overlay {
+        gap: 28px; /* Reduce vertical gap on short screens */
+    }
+
+    .intro-glow {
+        width: 90vw; /* Prevent horizontal overflow on mobile */
+        height: 40vw;
+    }
+
+    .intro-name {
+        font-size: clamp(2.5rem, 16vw, 5rem); /* Scale name down on mobile */
+    }
+
+    .intro-bar-wrap {
+        width: clamp(160px, 70vw, 280px); /* Narrower bar on mobile */
+    }
+
+    .intro-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
+        margin-top: -20px;
+    }
+}
+
+@media (max-width: 380px) {
+    .intro-overlay {
+        gap: 20px;
+    }
+
+    .intro-name {
+        font-size: clamp(2rem, 18vw, 3.5rem);
+    }
+
+    .intro-bar-wrap {
+        width: clamp(140px, 75vw, 240px);
+    }
+}

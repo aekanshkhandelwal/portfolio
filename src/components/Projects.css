@@ -2719,12 +2719,36 @@
         width: 92% !important;
         left: 4% !important;
         transform: none !important;
-        bottom: 32px !important;
+        bottom: 30px !important;
         height: auto !important;
-        max-height: 60vh !important;
+        max-height: 50vh !important;
         z-index: 9999 !important;
         overflow-y: auto !important;
-        position: fixed !important; /* Use fixed to escape all clipping ancestors */
+        position: absolute !important;
+    }
+
+    /* KEY: Remove transforms from monitor - transforms create stacking contexts
+       that break absolutely-positioned descendants (Start Menu) */
+    .animate-monitor {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    /* Allow Start Menu to overflow out of its clipping parent */
+    .monitor-screen {
+        overflow: visible !important;
+    }
+
+    .desktop-env {
+        overflow: visible !important;
+    }
+
+    .desktop-env.win11.consolidated {
+        overflow: visible !important;
+    }
+
+    .os-taskbar-glass {
+        overflow: visible !important;
     }
 }
 

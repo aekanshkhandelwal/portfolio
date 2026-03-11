@@ -1018,20 +1018,22 @@ export default function Projects() {
                                     )}
 
                                     {/* Taskbar */}
-                                    <div className="os-taskbar-glass" onClick={() => showStartMenu && setShowStartMenu(false)}>
+                                    <div
+                                        className="os-taskbar-glass"
+                                        onClick={(e) => { if (e.target === e.currentTarget || !e.currentTarget.querySelector('.start-btn')?.contains(e.target)) { if (showStartMenu) setShowStartMenu(false); } }}
+                                    >
                                         {/* Centered App Group */}
                                         <div className="os-taskbar-apps">
-                                            <div
+                                            <button
                                                 className={`os-taskbar-item start-btn ${showStartMenu ? 'active' : ''}`}
                                                 onClick={(e) => { e.stopPropagation(); setShowStartMenu(s => !s); }}
-                                                onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); setShowStartMenu(s => !s); }}
                                                 title="Start"
-                                                style={{ touchAction: 'manipulation' }}
+                                                style={{ touchAction: 'manipulation', background: 'none', border: 'none', cursor: 'pointer' }}
                                             >
-                                                <svg viewBox="0 0 24 24" style={{ width: '14px', height: '14px', fill: '#3b82f6' }}>
+                                                <svg viewBox="0 0 24 24" style={{ width: '14px', height: '14px', fill: '#3b82f6', display: 'block' }}>
                                                     <path d="M0 0h11.4v11.4H0V0zm12.6 0H24v11.4H12.6V0zM0 12.6h11.4V24H0V12.6zm12.6 0H24V24H12.6V12.6z" />
                                                 </svg>
-                                            </div>
+                                            </button>
 
                                             <div className="os-taskbar-item text-slate-400" title="Search">
                                                 <i className="fas fa-search text-lg"></i>
@@ -1078,13 +1080,14 @@ export default function Projects() {
                         </div>
                         <div className="monitor-hardware-ui">
                             <div className={`monitor-status-light ${monitorStatus}`}></div>
-                            <div
+                            <button
                                 className={`monitor-power-btn ${monitorStatus}`}
                                 onClick={handlePowerToggle}
                                 title={monitorStatus === 'on' ? "Power Off" : "Power On"}
+                                style={{ touchAction: 'manipulation', background: 'none', border: 'none', cursor: 'pointer' }}
                             >
                                 <i className="fas fa-power-off"></i>
-                            </div>
+                            </button>
                         </div>
                         <div className="monitor-brand">PORTFOLIO OS</div>
                     </div>
