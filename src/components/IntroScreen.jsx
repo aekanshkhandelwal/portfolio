@@ -33,46 +33,50 @@ export default function IntroScreen({ onComplete }) {
         }
 
         // Locate the target element in the Hero
-        const heroTarget = document.querySelector('.hero-title .gradient-text.text-glow');
+        const heroTarget = document.getElementById('flip-target');
         if (!heroTarget) {
             setTimeout(() => { onComplete(); setDone(true); }, 800);
             return;
         }
 
         // ── FLIP: measure both positions ──
-        const introRect = introEl.getBoundingClientRect();
-        const heroRect = heroTarget.getBoundingClientRect();
+        // Using double rAF to ensure browser has updated layout for the target
+        requestAnimationFrame(() => {
+            const introRect = introEl.getBoundingClientRect();
+            const heroRect = heroTarget.getBoundingClientRect();
 
-        const introCX = introRect.left + introRect.width / 2;
-        const introCY = introRect.top + introRect.height / 2;
-        const heroCX = heroRect.left + heroRect.width / 2;
-        const heroCY = heroRect.top + heroRect.height / 2;
+            const introCX = introRect.left + introRect.width / 2;
+            const introCY = introRect.top + introRect.height / 2;
+            const heroCX = heroRect.left + heroRect.width / 2;
+            const heroCY = heroRect.top + heroRect.height / 2;
 
-        const dx = heroCX - introCX;
-        const dy = heroCY - introCY;
-        const scale = Math.min(heroRect.width / introRect.width, heroRect.height / introRect.height);
+            const dx = heroCX - introCX;
+            const dy = heroCY - introCY;
+            const scale = Math.min(heroRect.width / introRect.width, heroRect.height / introRect.height);
 
-        // Start position: no transform
-        introEl.style.transition = 'none';
-        introEl.style.transform = 'none';
-        introEl.style.opacity = '1';
-        introEl.getBoundingClientRect(); // force reflow
+            // Start position: no transform
+            introEl.style.transition = 'none';
+            introEl.style.transform = 'none';
+            introEl.style.opacity = '1';
+            introEl.getBoundingClientRect(); // force reflow
 
-        // Animate to hero position; fade out near the end so it "lands" before disappearing
-        introEl.style.transition = `
-            transform ${FLIP_DURATION}ms cubic-bezier(0.19, 1, 0.22, 1),
-            opacity   150ms ease ${FLIP_DURATION - 50}ms
-        `;
-        introEl.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
-        introEl.style.opacity = '0';
+            // Animate to hero position; fade out near the end so it "lands" before disappearing
+            introEl.style.transition = `
+                transform ${FLIP_DURATION}ms cubic-bezier(0.19, 1, 0.22, 1),
+                opacity   150ms ease ${FLIP_DURATION - 50}ms
+            `;
+            introEl.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+            introEl.style.opacity = '0';
 
-        // After FLIP lands: notify parent → triggers staggered site reveal
-        setTimeout(() => {
-            onComplete();
-            // Give one more frame then remove overlay entirely
-            requestAnimationFrame(() => setDone(true));
-        }, FLIP_DURATION + 50);
+            // After FLIP lands: notify parent → triggers staggered site reveal
+            setTimeout(() => {
+                onComplete();
+                // Give one more frame then remove overlay entirely
+                requestAnimationFrame(() => setDone(true));
+            }, FLIP_DURATION + 50);
+        });
     }
+
 
     return (
         <div className={`intro-overlay${done ? ' done' : ''}`}>

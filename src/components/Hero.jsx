@@ -99,7 +99,7 @@ export default function Hero() {
                 <div className="hero-content">
 
                     <h1 className="hero-title">
-                        <span className="title-reveal-part prefix">Hi, I'm</span> <span className="gradient-text text-glow">Aekansh</span><br />
+                        <span className="title-reveal-part prefix">Hi, I'm</span> <span id="flip-target" className="gradient-text text-glow">Aekansh</span><br />
                         <span className="title-reveal-part suffix">Data Analyst &amp; Software Developer</span>
                     </h1>
                     <p className="hero-subtitle">
