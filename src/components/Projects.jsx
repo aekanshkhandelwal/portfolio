@@ -297,7 +297,16 @@ export default function Projects() {
     const [monitorStatus, setMonitorStatus] = useState('on'); // 'on' | 'off' | 'booting' | 'shutting-down'
 
     const handlePowerToggle = (e) => {
-        if (e) e.stopPropagation();
+        if (e) {
+            e.stopPropagation();
+            if (e.cancelable) e.preventDefault();
+        }
+        
+        // Prevent accidental double toggles on touch
+        const now = Date.now();
+        if (window._lastPowerToggle && (now - window._lastPowerToggle < 500)) return;
+        window._lastPowerToggle = now;
+
         if (monitorStatus === 'on') {
             setMonitorStatus('shutting-down');
             setTimeout(() => {
@@ -366,6 +375,8 @@ export default function Projects() {
         if (activeWindow === idx) setActiveWindow(null);
     };
 
+    const [isDragging, setIsDragging] = useState(false);
+
     // Unified Dragging Logic for Mouse and Touch
     const startDrag = (e, idx) => {
         const isTouch = e.type === 'touchstart';
@@ -375,6 +386,11 @@ export default function Projects() {
         const initialY = windowPositions[idx]?.y || 50;
 
         const onMove = (moveE) => {
+            if (isTouch) {
+                // Prevent scrolling while dragging
+                if (moveE.cancelable) moveE.preventDefault();
+            }
+            setIsDragging(true);
             const currentX = isTouch ? moveE.touches[0].clientX : moveE.clientX;
             const currentY = isTouch ? moveE.touches[0].clientY : moveE.clientY;
             const dx = currentX - startX;
@@ -387,6 +403,7 @@ export default function Projects() {
         };
 
         const onEnd = () => {
+            setTimeout(() => setIsDragging(false), 50);
             if (isTouch) {
                 document.removeEventListener('touchmove', onMove);
                 document.removeEventListener('touchend', onEnd);
@@ -1219,7 +1236,21 @@ export default function Projects() {
                         </div>
                     )}
 
-                    {viewMode === 'desktop' && renderDesktopContent()}
+                    {viewMode === 'desktop' && (
+                        window.innerWidth <= 768 ? (
+                            <div className="mobile-desktop-popup-overlay">
+                                <div className="mobile-popup-header">
+                                    <span className="popup-title">Project Desktop Environment</span>
+                                    <button className="popup-close-btn" onClick={() => setViewMode('grid')}>
+                                        <i className="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div className="mobile-popup-body">
+                                    {renderDesktopContent()}
+                                </div>
+                            </div>
+                        ) : renderDesktopContent()
+                    )}
                     {viewMode === 'comic' && renderComicContent()}
                 </div>
             </div>
