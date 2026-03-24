@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.aekanshkhandelwal.tech/sitemap.xml
+
+Sitemap: https://www.aekanshkhandelwal.tech/sitemap.xml

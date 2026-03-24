@@ -18,15 +18,26 @@ export default defineConfig({
         // Split vendor libraries into separate cacheable chunks
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // React core into its own chunk
+            // React core
             if (id.includes('react-dom') || id.includes('react/')) {
               return 'react-vendor'
             }
-            // EmailJS into its own chunk (only needed for Contact section)
+            // Motion
+            if (id.includes('framer-motion')) {
+              return 'motion-vendor'
+            }
+            // Icons
+            if (id.includes('lucide-react')) {
+              return 'lucide-vendor'
+            }
+            // Graphics
+            if (id.includes('three') || id.includes('@splinetool')) {
+              return 'graphics-vendor'
+            }
+            // EmailJS
             if (id.includes('@emailjs')) {
               return 'emailjs-vendor'
             }
-            // All other node_modules together
             return 'vendor'
           }
         },
