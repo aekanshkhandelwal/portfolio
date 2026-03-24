@@ -29,10 +29,18 @@ export default function IntroScreen({ onComplete }) {
             startFlip();
         }, 2200 + LOAD_DURATION + PRE_FLIP_DELAY);
 
+        // 4. Global Fail-Safe: Force completion after 6 seconds if anything gets stuck
+        const failSafeTimer = setTimeout(() => {
+            console.warn('IntroScreen fail-safe triggered');
+            onComplete();
+            setDone(true);
+        }, 6500);
+
         return () => {
             clearTimeout(blinkTimer);
             clearTimeout(originalTimer);
             clearTimeout(flipTimer);
+            clearTimeout(failSafeTimer);
         };
     }, []);
 

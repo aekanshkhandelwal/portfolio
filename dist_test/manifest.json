@@ -1,0 +1,22 @@
+{
+  "short_name": "Aekansh",
+  "name": "Aekansh Khandelwal | AI & Data Portfolio",
+  "icons": [
+    {
+      "src": "/site-logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/site-logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0a0a0b",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#0a0a0b",
+  "description": "Portfolio of Aekansh Khandelwal – Agentic AI Specialist & Data Analyst."
+}
