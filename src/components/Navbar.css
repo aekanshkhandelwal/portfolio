@@ -400,3 +400,12 @@
         display: none;
     }
 }
+/* Mobile Navbar Polish */
+@media (max-width: 380px) {
+    .nav-logo {
+        font-size: 0.95rem !important;
+    }
+    .nav-inner {
+        padding: 10px 14px !important;
+    }
+}

@@ -1,0 +1,292 @@
+/* ══════════════════════════════════════════════════════════
+   IDE VIEW
+══════════════════════════════════════════════════════════ */
+.skills-section.ide-mode .skills-graph-grid {
+    opacity: 0.2;
+}
+
+.ide-container {
+    height: 90%;
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background: #0d0d12;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #2a2a35;
+    font-family: var(--mono);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.ide-header {
+    background: #1a1a24;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid #2a2a35;
+}
+
+.ide-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dot.red {
+    background: #ff5f56;
+}
+
+.dot.yellow {
+    background: #ffbd2e;
+}
+
+.dot.green {
+    background: #27c93f;
+}
+
+.ide-tab {
+    background: #1e1e2e;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    border-radius: 6px 6px 0 0;
+    border-top: 1px solid #3b3b4f;
+    border-left: 1px solid #3b3b4f;
+    border-right: 1px solid #3b3b4f;
+}
+
+.ide-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.ide-sidebar {
+    width: 260px;
+    background: #16161e;
+    border-right: 1px solid #2a2a35;
+    padding: 20px 0;
+    overflow-y: auto;
+}
+
+.sidebar-group-label {
+    font-size: 0.7rem;
+    color: #565f89;
+    padding: 0 20px 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.side-item {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.side-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.side-item.active {
+    background: rgba(124, 58, 237, 0.1);
+    border-left: 2px solid var(--accent);
+}
+
+.side-icon {
+    font-size: 1.1rem;
+}
+
+.side-label {
+    font-size: 0.85rem;
+    color: #a9b1d6;
+}
+
+.side-item.active .side-label {
+    color: #fff;
+}
+
+.ide-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #1a1b26;
+    overflow: hidden;
+}
+
+.ide-content {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.ide-breadcrumbs {
+    padding: 8px 20px;
+    background: #1f202e;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #565f89;
+}
+
+.sep {
+    margin: 0 4px;
+}
+
+.path.active-file {
+    color: #bb9af7;
+}
+
+.code-editor-area {
+    flex: 1;
+    display: flex;
+    padding: 20px 0;
+    overflow-y: auto;
+}
+
+.line-numbers {
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #3b4261;
+    font-size: 0.85rem;
+    padding-top: 4px;
+}
+
+.code-block {
+    flex: 1;
+    margin: 0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.syntax-keyword {
+    color: #f7768e;
+}
+
+.syntax-variable {
+    color: #7aa2f7;
+}
+
+.syntax-property {
+    color: #73daca;
+}
+
+.syntax-string {
+    color: #9ece6a;
+}
+
+.code-line-nested {
+    padding-left: 20px;
+}
+
+.ide-terminal {
+    flex: 1;
+    border-top: 1px solid #2a2a35;
+    background: #0d0d12;
+    display: flex;
+    flex-direction: column;
+}
+
+.terminal-header {
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #16161e;
+}
+
+.terminal-tabs {
+    display: flex;
+    gap: 20px;
+}
+
+.t-tab {
+    font-size: 0.7rem;
+    color: #565f89;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.t-tab.active {
+    color: #fff;
+    border-bottom: 1px solid var(--accent);
+}
+
+.terminal-body {
+    padding: 15px 20px;
+    font-size: 0.85rem;
+}
+
+.t-line {
+    margin-bottom: 6px;
+}
+
+.t-prompt {
+    color: #9ece6a;
+}
+
+.t-path {
+    color: #7aa2f7;
+}
+
+.t-cmd {
+    color: #fff;
+}
+
+.t-output {
+    color: #a9b1d6;
+    font-style: italic;
+}
+
+.t-cursor {
+    animation: blink 1s step-end infinite;
+    background: #fff;
+    color: #fff;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.ide-footer {
+    background: var(--accent);
+    padding: 4px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #fff;
+}
+
+.footer-left,
+.footer-right {
+    display: flex;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .ide-sidebar {
+        display: none;
+    }
+
+    .line-numbers {
+        display: none;
+    }
+
+    .code-editor-area {
+        padding: 10px;
+    }
+}

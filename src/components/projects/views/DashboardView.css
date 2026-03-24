@@ -1,0 +1,837 @@
+/* ── Quantum AI Dashboard: Premium HUD System ── */
+
+:root {
+    --q-bg: #030407;
+    --q-bg-soft: #0a0b14;
+    --q-primary: #00f2ff;
+    --q-primary-glow: rgba(0, 242, 255, 0.4);
+    --q-secondary: #0066ff;
+    --q-text: #f1f5f9;
+    --q-text-dim: #64748b;
+    --q-surface: rgba(10, 10, 15, 0.4);
+    --q-border: rgba(255, 255, 255, 0.05);
+    --q-mono: 'JetBrains Mono', monospace;
+    --q-display: 'Space Grotesk', sans-serif;
+}
+
+/* ── Theme Variations ── */
+.theme-teal {
+    --q-primary: #00f2ff;
+    --q-secondary: #06b6d4;
+    --q-primary-glow: rgba(0, 242, 255, 0.3);
+    --q-accent-grad: linear-gradient(135deg, #00f2ff 0%, #06b6d4 100%);
+}
+
+.theme-blue {
+    --q-primary: #3b82f6;
+    --q-secondary: #2563eb;
+    --q-primary-glow: rgba(59, 130, 246, 0.3);
+    --q-accent-grad: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.theme-purple {
+    --q-primary: #a855f7;
+    --q-secondary: #7c3aed;
+    --q-primary-glow: rgba(168, 85, 247, 0.3);
+    --q-accent-grad: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+}
+
+.theme-orange {
+    --q-primary: #f59e0b;
+    --q-secondary: #d97706;
+    --q-primary-glow: rgba(245, 158, 11, 0.3);
+    --q-accent-grad: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.quantum-dashboard {
+    position: relative;
+    width: 100%;
+    min-height: 85vh;
+    background: transparent !important;
+    color: var(--q-text);
+    font-family: var(--q-display);
+    border-radius: 1px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9);
+    transition: background 1.5s ease;
+}
+
+.quantum-bg-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.quantum-mesh {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(var(--q-primary) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.05;
+    z-index: 2;
+    mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+}
+
+.ambient-glow {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, var(--q-primary-glow) 0%, transparent 70%);
+    filter: blur(120px);
+    opacity: 0.15;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 50%;
+}
+
+.quantum-grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* ── Central Hub ── */
+.core-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    /* CRITICAL: Must be above HUD panels to receive clicks */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    /* Container is transparent to clicks */
+}
+
+.project-core {
+    position: relative;
+    width: 320px;
+    height: 320px;
+}
+
+.core-orb {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--q-primary), transparent 70%);
+    box-shadow:
+        0 0 60px var(--q-primary-glow),
+        inset 0 0 30px rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 2;
+}
+
+.core-aura {
+    position: absolute;
+    inset: -30px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--q-primary-glow) 0%, transparent 70%);
+    opacity: 0.4;
+    animation: aura-pulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes aura-pulse {
+    from {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+
+    to {
+        transform: scale(1.15);
+        opacity: 0.5;
+    }
+}
+
+/* ── Orbital Nav ── */
+.orbital-nav {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.orbital-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+}
+
+.nav-node {
+    width: 56px;
+    height: 56px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--q-text-dim);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(12px);
+}
+
+.nav-node:hover,
+.nav-node.active {
+    color: white;
+    background: var(--q-accent-grad);
+    border-color: transparent;
+    box-shadow: 0 0 30px var(--q-primary-glow);
+    transform: scale(1.15);
+}
+
+/* ── HUD Layers ── */
+.quantum-hud {
+    position: relative;
+    z-index: 10;
+    /* Lower than core-container */
+    flex: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr 320px;
+    /* Narrower columns */
+    gap: 20px;
+    padding: 32px;
+    pointer-events: none;
+    background: transparent !important;
+}
+
+.hud-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    pointer-events: auto;
+    /* Buttons inside HUD should still work if visible */
+}
+
+/* ── Responsive Fix for Overlapping Panels ── */
+@media (max-width: 1200px) {
+    .quantum-hud {
+        grid-template-columns: 1fr;
+        pointer-events: none;
+    }
+
+    .hud-column.left,
+    .hud-column.right {
+        position: absolute;
+        bottom: 80px;
+        width: 300px;
+        z-index: 5;
+        /* Below the core */
+        pointer-events: none;
+        /* Make panels click-through so the core behind them works */
+    }
+
+    .hud-column.left {
+        left: 20px;
+    }
+
+    .hud-column.right {
+        right: 20px;
+    }
+
+    /* Ensure only links/buttons in HUD are clickable, not the background */
+    .hud-panel {
+        pointer-events: none;
+    }
+
+    .hud-panel a,
+    .hud-panel button {
+        pointer-events: auto;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .hud-column.left,
+    .hud-column.right {
+        display: none;
+        /* Hide panels completely on tablet/mobile to focus on orbital UI */
+    }
+
+    .project-core {
+        width: 280px;
+        height: 280px;
+    }
+}
+
+.hud-panel {
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: none !important;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.hud-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    opacity: 0.1;
+}
+
+.hud-panel::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+    animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.panel-label {
+    font-family: var(--q-mono);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--q-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-title {
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.viz-container {
+    height: 100px;
+    margin: 12px 0;
+}
+
+.spectral-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.radial-container {
+    position: relative;
+    width: 64px;
+    height: 64px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.05);
+    stroke-width: 4;
+}
+
+.radial-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--q-mono);
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.metric-name {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--q-text-dim);
+}
+
+.system-footer {
+    position: absolute;
+    bottom: 32px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.status-badge {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mobile-dashboard-shell {
+    display: none;
+}
+
+.mobile-dashboard-panel {
+    background: rgba(8, 12, 20, 0.76);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 16px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.mobile-dashboard-title {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 10px;
+}
+
+.mobile-dashboard-copy {
+    font-size: 12px;
+    line-height: 1.65;
+    color: rgba(241, 245, 249, 0.72);
+}
+
+.mobile-tag-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.mobile-tag-chip {
+    min-height: 36px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+.mobile-tag-chip span {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(241, 245, 249, 0.78);
+    line-height: 1.2;
+}
+
+.mobile-dashboard-link {
+    margin-top: 14px;
+    min-height: 42px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    color: white;
+    text-decoration: none;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.mobile-dashboard-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+}
+
+.mobile-dashboard-link span {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.74;
+}
+
+.mobile-dashboard-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+}
+
+.mobile-dashboard-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.mobile-nav-chip {
+    min-width: 110px;
+    min-height: 50px;
+    border-radius: 16px;
+    background: rgba(8, 12, 20, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(241, 245, 249, 0.74);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    text-align: left;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.mobile-nav-chip.active {
+    color: white;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: 0 0 24px var(--q-primary-glow);
+}
+
+.mobile-nav-chip:active {
+    transform: scale(0.98);
+}
+
+.mobile-nav-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
+    font-size: 16px;
+}
+
+.mobile-nav-label {
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.15;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+@media (max-width: 900px) {
+    .quantum-dashboard {
+        min-height: auto;
+        padding: 18px 14px 20px;
+        gap: 0;
+    }
+
+    .ambient-glow {
+        width: 540px;
+        height: 540px;
+        filter: blur(80px);
+        opacity: 0.12;
+    }
+
+    .quantum-grid-overlay {
+        background-size: 52px 52px;
+    }
+
+    .core-container {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        min-height: 320px;
+        margin: 12px 0 18px;
+    }
+
+    .project-core {
+        margin: 0 auto;
+    }
+
+    .project-core .text-6xl {
+        font-size: 40px;
+        line-height: 1;
+        margin-bottom: 16px;
+    }
+
+    .project-core h3 {
+        font-size: 19px;
+        max-width: 170px;
+    }
+
+    .core-aura {
+        inset: -22px;
+    }
+
+    .nav-node {
+        width: 44px;
+        height: 44px;
+    }
+
+    .nav-node svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .quantum-hud {
+        display: block;
+        flex: 0 0 auto;
+        min-height: 0;
+        padding: 0;
+    }
+
+    .hud-column.center {
+        display: none;
+    }
+
+    .mobile-dashboard-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+        z-index: 25;
+    }
+
+    .system-footer {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        margin-top: 14px;
+    }
+
+    .status-badge {
+        padding: 7px 12px;
+        gap: 8px;
+    }
+
+    .status-badge span {
+        font-size: 8px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .quantum-dashboard {
+        padding: 14px 10px 18px;
+    }
+
+    .ambient-glow {
+        width: 400px;
+        height: 400px;
+        filter: blur(64px);
+    }
+
+    .quantum-grid-overlay {
+        background-size: 42px 42px;
+        opacity: 0.34;
+    }
+
+    .core-container {
+        min-height: 268px;
+        margin: 8px 0 14px;
+    }
+
+    .project-core .text-6xl {
+        font-size: 34px;
+        margin-bottom: 12px;
+    }
+
+    .project-core h3 {
+        font-size: 16px;
+        max-width: 140px;
+    }
+
+    .nav-node {
+        width: 38px;
+        height: 38px;
+    }
+
+    .nav-node svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .mobile-dashboard-panel {
+        border-radius: 16px;
+        padding: 12px;
+    }
+
+    .panel-label {
+        font-size: 8px;
+        margin-bottom: 12px;
+        gap: 6px;
+    }
+
+    .mobile-dashboard-title {
+        font-size: 17px;
+        margin-bottom: 8px;
+    }
+
+    .mobile-dashboard-copy {
+        font-size: 11px;
+        line-height: 1.55;
+    }
+
+    .mobile-tag-grid {
+        gap: 6px;
+    }
+
+    .mobile-tag-chip {
+        min-height: 30px;
+        padding: 5px 6px;
+        border-radius: 10px;
+    }
+
+    .mobile-tag-chip span {
+        font-size: 8px;
+    }
+
+    .mobile-dashboard-link {
+        min-height: 36px;
+        padding: 0 12px;
+        border-radius: 12px;
+    }
+
+    .mobile-dashboard-link span {
+        font-size: 8px;
+        letter-spacing: 0.1em;
+    }
+
+    .mobile-nav-chip {
+        min-width: 94px;
+        min-height: 42px;
+        padding: 0 10px;
+        gap: 8px;
+        border-radius: 14px;
+    }
+
+    .mobile-nav-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .mobile-nav-label {
+        font-size: 8px;
+    }
+
+    .status-badge {
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .quantum-dashboard {
+        padding: 12px 8px 16px;
+    }
+
+    .core-container {
+        min-height: 232px;
+        margin-bottom: 12px;
+    }
+
+    .project-core .text-6xl {
+        font-size: 30px;
+        margin-bottom: 10px;
+    }
+
+    .project-core h3 {
+        font-size: 14px;
+        max-width: 118px;
+    }
+
+    .nav-node {
+        width: 32px;
+        height: 32px;
+    }
+
+    .nav-node svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .mobile-dashboard-shell {
+        gap: 8px;
+    }
+
+    .mobile-dashboard-panel {
+        padding: 10px;
+        border-radius: 14px;
+    }
+
+    .mobile-dashboard-title {
+        font-size: 15px;
+    }
+
+    .mobile-dashboard-copy {
+        font-size: 10px;
+    }
+
+    .mobile-tag-chip {
+        min-height: 28px;
+    }
+
+    .mobile-tag-chip span {
+        font-size: 7px;
+    }
+
+    .mobile-nav-chip {
+        min-width: 82px;
+        min-height: 38px;
+        padding: 0 8px;
+        border-radius: 12px;
+    }
+
+    .mobile-nav-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+
+    .mobile-nav-label {
+        font-size: 7px;
+    }
+
+    .status-badge span {
+        letter-spacing: 0.12em !important;
+    }
+}

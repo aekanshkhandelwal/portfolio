@@ -1,0 +1,162 @@
+@keyframes super-scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(500%); }
+}
+
+.animate-super-scan {
+    animation: super-scan 8s linear infinite;
+}
+
+.super-view-shell {
+    height: auto;
+    min-height: 1080px;
+    padding-bottom: 8rem;
+}
+
+.super-view-nav {
+    padding-top: 4rem;
+}
+
+.super-view-nav__inner {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.super-view-tab {
+    padding: 1rem 0;
+}
+
+.super-view-tab__label {
+    font-size: clamp(0.625rem, 1.8vw, 1.125rem);
+    letter-spacing: 0.22em;
+}
+
+.super-view-main {
+    min-height: 100%;
+}
+
+.super-view-stage {
+    margin-top: 10rem;
+    padding-bottom: 9rem;
+}
+
+.super-shard-card {
+    padding: 1rem 3.5rem 1rem 2.5rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+}
+
+.super-shard-index {
+    margin-right: 1.5rem;
+    font-size: 0.75rem;
+}
+
+@media (max-width: 1024px) {
+    .super-view-shell {
+        min-height: 980px;
+        padding-bottom: 7rem;
+    }
+
+    .super-view-nav__inner {
+        padding-inline: 1.25rem;
+        gap: 0.75rem;
+    }
+
+    .super-view-stage {
+        margin-top: 9rem;
+        padding-bottom: 7rem;
+    }
+
+    .super-shard-card {
+        padding: 0.95rem 2.8rem 0.95rem 2rem;
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .super-view-shell {
+        height: auto;
+        min-height: 860px;
+        padding-bottom: 6rem;
+    }
+
+    .super-view-nav {
+        padding-top: 1.5rem;
+    }
+
+    .super-view-nav__inner {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.35rem 0.75rem;
+        padding: 0 1rem 1.2rem;
+    }
+
+    .super-view-tab {
+        flex: 0 1 calc(50% - 0.5rem);
+        min-width: 0;
+        padding: 0.75rem 0;
+    }
+
+    .super-view-tab__label {
+        font-size: 0.74rem;
+        letter-spacing: 0.14em;
+    }
+
+    .super-view-stage {
+        margin-top: 7.75rem;
+        padding-bottom: 5.5rem;
+    }
+
+    .super-shard-card {
+        padding: 0.8rem 1.8rem 0.8rem 1.35rem;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+    }
+
+    .super-shard-index {
+        margin-right: 0.9rem;
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .super-view-shell {
+        min-height: 780px;
+        padding-bottom: 5rem;
+    }
+
+    .super-view-nav__inner {
+        padding-inline: 0.75rem;
+    }
+
+    .super-view-tab {
+        flex-basis: 100%;
+        padding: 0.6rem 0;
+    }
+
+    .super-view-tab__label {
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+    }
+
+    .super-view-stage {
+        margin-top: 8.5rem;
+        padding-bottom: 4.5rem;
+    }
+
+    .super-shard-card {
+        padding: 0.72rem 1.25rem 0.72rem 1rem;
+        font-size: 0.6rem;
+        letter-spacing: 0.06em;
+    }
+
+    .super-shard-index {
+        margin-right: 0.65rem;
+        font-size: 0.54rem;
+    }
+}

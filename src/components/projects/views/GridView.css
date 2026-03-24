@@ -1,0 +1,61 @@
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 32px;
+    perspective: 2000px;
+}
+
+.projects-grid.spotlight-parent:has(.reveal:hover) .reveal:not(:hover) .project-card {
+    opacity: 0.1;
+    transform: scale(0.96);
+    filter: blur(2px);
+}
+
+.reveal {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.project-card-wrapper {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.project-card-click-area {
+    cursor: pointer;
+    height: 100%;
+}
+
+.reveal:hover .project-card {
+    transform: translateY(-12px) rotateX(6deg) rotateY(-4deg);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(15, 23, 42, 0.5);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    z-index: 10;
+}
+
+.reveal:hover .card-glow {
+    opacity: 1;
+}
+
+@media (max-width: 1200px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}

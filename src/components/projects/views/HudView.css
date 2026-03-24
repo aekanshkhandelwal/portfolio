@@ -1,0 +1,773 @@
+.hud-view-container {
+    min-height: 95vh;
+    background: transparent !important;
+    color: #fff;
+    padding: 2rem;
+    font-family: 'Space Grotesk', sans-serif;
+    position: relative;
+    overflow: hidden;
+    border: none !important;
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.7);
+    border-radius: 1rem;
+    --hud-accent: #8b5cf6;
+}
+
+.hud-bg-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.15;
+    background-image: radial-gradient(var(--hud-accent) 2px, transparent 2px);
+    background-size: 30px 30px;
+    z-index: 1;
+}
+
+.hud-bg-scanlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px);
+    z-index: 2;
+}
+
+.hud-console-layout {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.25rem;
+    position: relative;
+    z-index: 10;
+    height: 85vh;
+}
+
+/* Scrollbar Utility for HUD Selection */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.hud-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.hud-aside.selection-col {
+    grid-column: span 3;
+    overflow: hidden;
+    height: 85vh;
+    /* Force fixed height to enable child scroll */
+    position: relative;
+}
+
+.hud-mission-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow-y: auto;
+    height: calc(100% - 100px);
+    /* Account for header + padding */
+    padding-right: 0.75rem;
+    margin-top: 1rem;
+}
+
+.hud-mission-list::-webkit-scrollbar {
+    width: 2px;
+}
+
+.hud-mission-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.hud-mission-list::-webkit-scrollbar-thumb {
+    background: var(--hud-accent);
+}
+
+.hud-mission-log-header {
+    background: #fff;
+    color: #000;
+    font-weight: 900;
+    font-style: italic;
+    padding: 0.5rem 1rem;
+    border: 4px solid #000;
+    box-shadow: 4px 4px 0px var(--hud-accent);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.hud-mission-btn {
+    position: relative;
+    padding: 0.8rem 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(8, 12, 20, 0.4);
+    cursor: pointer;
+    width: 100%;
+    overflow: hidden;
+}
+
+.hud-mission-btn:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.hud-mission-btn.active {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: var(--hud-accent);
+    transform: translateX(6px);
+    box-shadow: 0 0 20px rgba(var(--hud-accent-rgb, 139, 92, 246), 0.2);
+}
+
+.hud-mission-btn.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--hud-accent);
+}
+
+.hud-active-pulse {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 6px;
+    height: 6px;
+    background: var(--hud-accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--hud-accent);
+    animation: hud-pulse 1.5s infinite;
+}
+
+@keyframes hud-pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+        box-shadow: 0 0 0 0 rgba(var(--hud-accent-rgb, 139, 92, 246), 0.7);
+    }
+    70% {
+        transform: scale(1.1);
+        opacity: 1;
+        box-shadow: 0 0 0 6px rgba(var(--hud-accent-rgb, 139, 92, 246), 0);
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+        box-shadow: 0 0 0 0 rgba(var(--hud-accent-rgb, 139, 92, 246), 0);
+    }
+}
+
+.hud-mission-title {
+    font-weight: 900;
+    font-style: italic;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 0.25rem 0;
+    line-height: 1.1;
+    display: block;
+    word-break: break-all;
+    white-space: normal;
+    letter-spacing: -0.02em;
+}
+
+.hud-mission-id {
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.15em;
+    font-family: monospace;
+}
+
+/* Main Briefing Styles */
+.hud-main-briefing {
+    grid-column: span 6;
+    display: flex;
+    flex-direction: column;
+}
+
+.hud-briefing-window {
+    flex: 1;
+    background: #0a0a0f;
+    border: 4px solid #fff;
+    padding: 2rem;
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.hud-texture-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8rem;
+    height: 8rem;
+    background: var(--hud-accent);
+    opacity: 0.1;
+    transform: rotate(-45deg) translate(3rem, -3rem);
+}
+
+.hud-glow-line-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, transparent, #22d3ee, transparent);
+    opacity: 0.5;
+}
+
+.hud-briefing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+.hud-glitch-title {
+    font-size: 3rem;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    filter: drop-shadow(4px 4px 0px #000);
+    margin: 0;
+}
+
+.hud-subtitle {
+    font-size: 10px;
+    font-weight: 900;
+    color: #a78bfa;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.hud-icon-box {
+    width: 4rem;
+    height: 4rem;
+    background: #fff;
+    border: 4px solid #000;
+    box-shadow: 4px 4px 0px var(--hud-accent);
+    transform: rotate(-6deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hud-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #000 !important;
+}
+
+.hud-briefing-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.hud-tag-cloud {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.hud-tag {
+    font-size: 9px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.25rem 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    text-transform: uppercase;
+}
+
+.hud-active-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    font-style: italic;
+    color: #22d3ee;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0 0 0.75rem 0;
+}
+
+.hud-desc-container {
+    border-left: 8px solid var(--hud-accent);
+    padding-left: 1.5rem;
+}
+
+.hud-desc {
+    font-size: 1rem;
+    font-style: italic;
+    color: #d1d5db;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.hud-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.hud-metric-box {
+    background: #000;
+    border: 2px solid #fff;
+    padding: 0.5rem 0.75rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.hud-metric-id {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 4px;
+    background: #fff;
+    color: #000;
+    font-size: 8px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.hud-metric-label {
+    font-size: 10px;
+    font-weight: 900;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+
+.hud-metric-val {
+    font-size: 1.125rem;
+    font-weight: 900;
+    font-style: italic;
+    color: #fff;
+    margin: 0;
+    line-height: 1.1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hud-launch-btn {
+    margin-top: 2rem;
+    background: #fff;
+    color: #000;
+    padding: 1.25rem;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    text-align: center;
+    border: 4px solid #000;
+    box-shadow: 8px 8px 0px #000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.25rem;
+    text-decoration: none;
+}
+
+.hud-launch-btn:hover {
+    background: #22d3ee;
+    transform: scale(1.02);
+}
+
+/* Telemetry Aside Styles */
+.hud-aside.telemetry-col {
+    grid-column: span 3;
+}
+
+.hud-status-panel {
+    background: #0a0a0f;
+    border: 4px solid #fff;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.hud-status-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.hud-status-icon-box {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--hud-accent);
+    border: 2px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hud-radio-icon {
+    color: #fff;
+    animation: hud-radio-animate 2s infinite;
+}
+
+@keyframes hud-radio-animate {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.hud-status-val {
+    font-size: 0.875rem;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0;
+}
+
+.hud-small-cap {
+    font-size: 10px;
+    font-weight: 900;
+    color: #6b7280;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.hud-efficiency-module {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.hud-progress-track {
+    height: 1rem;
+    background: #000;
+    border: 2px solid #fff;
+    padding: 2px;
+}
+
+.hud-progress-fill {
+    height: 100%;
+    background: #22d3ee;
+}
+
+.hud-progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    font-weight: 700;
+    opacity: 0.4;
+}
+
+.hud-telemetry-panel {
+    flex: 1;
+    border: 4px dashed rgba(255, 255, 255, 0.2);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hud-telemetry-panel:hover .hud-telemetry-bg-effect {
+    opacity: 1;
+}
+
+.hud-telemetry-bg-effect {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.05);
+    background-image: radial-gradient(#fff 1px, transparent 1px);
+    background-size: 10px 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.hud-telemetry-header {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem 0;
+}
+
+.hud-resource-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.hud-resource-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.hud-resource-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.hud-resource-name {
+    font-size: 10px;
+    font-weight: 900;
+    font-style: italic;
+    color: #9ca3af;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.hud-resource-item:hover .hud-resource-name {
+    color: #fff;
+}
+
+.hud-resource-hex {
+    font-size: 8px;
+    font-family: monospace;
+    color: #22d3ee;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.hud-resource-item:hover .hud-resource-hex {
+    opacity: 1;
+}
+
+.hud-resource-bar {
+    height: 0.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hud-resource-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--hud-accent);
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hud-resource-item:hover .hud-resource-fill {
+    background: #22d3ee;
+}
+
+.hud-tactical-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.hud-diagnostic-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    font-weight: 700;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.hud-bars-viz {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 4px;
+}
+
+.hud-viz-bar {
+    width: 4px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.hud-deco-icon {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    transform: rotate(12deg);
+    opacity: 0.15;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.hud-telemetry-panel:hover .hud-deco-icon {
+    opacity: 0.15;
+}
+
+/* Footer HUD Styles */
+.hud-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    margin-top: 1.5rem;
+    opacity: 0.4;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+}
+
+.hud-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.hud-footer-right {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.mobile-hud-shell {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .hud-view-container {
+        padding: 1rem;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .hud-console-layout {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        gap: 1.5rem;
+    }
+
+    .hud-aside.selection-col,
+    .hud-main-briefing,
+    .hud-aside.telemetry-col {
+        grid-column: span 12;
+        height: auto;
+    }
+
+    /* Selection becomes a horizontal or compact list on mobile */
+    .hud-mission-list {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        height: auto;
+    }
+
+    .hud-mission-btn {
+        flex-shrink: 0;
+        width: 180px;
+        transform: none !important;
+    }
+
+    .hud-main-briefing {
+        order: -1; /* Keep active project at top */
+    }
+
+    .hud-glitch-title {
+        font-size: 2.2rem;
+    }
+
+    .hud-status-panel {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .hud-glitch-title {
+        font-size: 1.8rem;
+    }
+
+    .hud-mission-btn {
+        width: 150px;
+    }
+
+    .hud-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- HUD HOVER EFFECTS & BLUR --- */
+@keyframes scan-once {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}
+
+.hud-mission-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.hud-mission-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-100%);
+    transition: transform 0.5s ease-in-out;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    z-index: 5;
+}
+
+.hud-mission-btn:hover::after {
+    transform: translateY(100%);
+}
+
+.hud-telemetry-panel {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.hud-telemetry-panel:hover {
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.05);
+}
+
+.hud-resource-item {
+    position: relative;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.hud-resource-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(4px);
+}

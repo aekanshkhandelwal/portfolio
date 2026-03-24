@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import './Navbar.css'
+import { scrollToSection, scrollToTop as scrollPageToTop } from '../lib/scroll'
 
 const links = ['about', 'skills', 'projects', 'certifications', 'education', 'contact']
 
@@ -9,20 +10,24 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
     const [active, setActive] = useState('')
     const lastScrollY = useRef(0)
+    const scrolledRef = useRef(false)
+    const visibleRef = useRef(true)
 
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY
+            const nextScrolled = currentScrollY > 50
 
-            // Scrolled state for styling
-            setScrolled(currentScrollY > 50)
+            if (nextScrolled !== scrolledRef.current) {
+                scrolledRef.current = nextScrolled
+                setScrolled(nextScrolled)
+            }
 
-            // Hide/Show logic
             if (!isOpen) {
-                if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-                    setVisible(false)
-                } else {
-                    setVisible(true)
+                const nextVisible = !(currentScrollY > lastScrollY.current && currentScrollY > 100)
+                if (nextVisible !== visibleRef.current) {
+                    visibleRef.current = nextVisible
+                    setVisible(nextVisible)
                 }
             }
 
@@ -49,25 +54,33 @@ export default function Navbar() {
         })
 
         window.addEventListener('scroll', handleScroll, { passive: true })
+        handleScroll()
         return () => {
             window.removeEventListener('scroll', handleScroll)
             observer.disconnect()
         }
     }, [isOpen])
 
-    const scrollToTop = (e) => {
+    const handleScrollToTop = (e) => {
         e.preventDefault()
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+        scrollPageToTop({ duration: 1 })
         setActive('')
+        setIsOpen(false)
+    }
+
+    const handleNavLinkClick = (e, id) => {
+        e.preventDefault()
+        scrollToSection(id, { duration: 1 })
+        setActive(id)
         setIsOpen(false)
     }
 
     const toggleMenu = () => setIsOpen(!isOpen)
 
     return (
-        <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${isOpen ? 'menu-open' : ''}`}>
+        <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${visible ? '' : 'hidden'} ${isOpen ? 'menu-open' : ''}`} aria-label="Main Navigation">
             <div className="nav-inner">
-                <a href="#hero" className="nav-logo" onClick={scrollToTop}>
+                <a href="#hero" className="nav-logo" onClick={handleScrollToTop}>
                     AK
                 </a>
 
@@ -79,7 +92,7 @@ export default function Navbar() {
                             <a
                                 href={`#${id}`}
                                 className={`nav-link ${active === id ? 'active' : ''}`}
-                                onClick={() => setIsOpen(false)}
+                                onClick={(e) => handleNavLinkClick(e, id)}
                             >
                                 {id.charAt(0).toUpperCase() + id.slice(1)}
                             </a>

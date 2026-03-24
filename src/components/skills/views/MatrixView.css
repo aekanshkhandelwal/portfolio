@@ -1,0 +1,265 @@
+/* Matrix: auto height + internal ambience */
+.skills-matrix-stage {
+    position: relative;
+    border-radius: inherit;
+    min-height: max(1120px, 100vh);
+    padding: clamp(1rem, 2.2vw, 1.8rem);
+}
+
+.skills-matrix-stage>section {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 2.5rem);
+}
+
+.skills-matrix-card {
+    position: relative;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+        radial-gradient(900px 420px at 15% 0%, rgba(255, 255, 255, 0.06), transparent 55%),
+        radial-gradient(800px 360px at 90% 120%, rgba(255, 255, 255, 0.04), transparent 58%),
+        rgba(9, 9, 12, 0.55);
+    backdrop-filter: blur(24px);
+    overflow: hidden;
+    padding: 34px;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), border-color 350ms ease, box-shadow 500ms ease;
+}
+
+.skills-matrix-card::before,
+.skills-matrix-card::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(255, 255, 255, 0.25);
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 350ms ease, border-color 350ms ease;
+}
+
+.skills-matrix-card::before {
+    top: 12px;
+    left: 12px;
+    border-top: 2px solid rgba(255, 255, 255, 0.25);
+    border-left: 2px solid rgba(255, 255, 255, 0.25);
+    border-top-left-radius: 10px;
+}
+
+.skills-matrix-card::after {
+    bottom: 12px;
+    right: 12px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+    border-right: 2px solid rgba(255, 255, 255, 0.25);
+    border-bottom-right-radius: 10px;
+}
+
+.skills-matrix-card.is-active {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 60px var(--mx-glow, rgba(168, 85, 247, 0.25));
+}
+
+.skills-matrix-card.is-active::before,
+.skills-matrix-card.is-active::after {
+    opacity: 0.95;
+    border-color: color-mix(in srgb, var(--mx-accent, #a855f7) 65%, rgba(255, 255, 255, 0.3));
+}
+
+.skills-matrix-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.skills-matrix-card-identity {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.skills-matrix-card-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--mx-accent, #a855f7) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--mx-accent, #a855f7) 30%, rgba(255, 255, 255, 0.1));
+    color: var(--mx-accent, #a855f7);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 14px 34px -22px var(--mx-glow, rgba(168, 85, 247, 0.3));
+}
+
+.skills-matrix-card-title {
+    font-size: 28px;
+    font-weight: 950;
+    letter-spacing: -0.02em;
+    color: #fff;
+    line-height: 1.1;
+    margin: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+}
+
+.skills-matrix-card-subtitle {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(161, 161, 170, 0.9);
+    margin: 6px 0 0 0;
+}
+
+.skills-matrix-card-visual {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0 18px;
+    min-height: 400px;
+}
+
+@keyframes skillsSpinSlow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.skills-spin-slow {
+    animation: skillsSpinSlow 25s linear infinite;
+}
+
+@media (min-width: 768px) {
+    .skills-matrix-stage>section {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .skills-matrix-stage {
+        min-height: auto;
+        padding: 16px 12px;
+    }
+
+    .skills-matrix-card {
+        padding: 22px 18px;
+        min-height: 440px;
+        border-radius: 24px;
+    }
+
+    .skills-matrix-card-header {
+        margin-bottom: 16px;
+    }
+
+    .skills-matrix-card-identity {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .skills-matrix-card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        flex-shrink: 0;
+    }
+
+    .skills-matrix-card-title {
+        font-size: 20px;
+        line-height: 1.08;
+    }
+
+    .skills-matrix-card-subtitle {
+        letter-spacing: 0.16em;
+    }
+
+    .skills-matrix-card-visual {
+        min-height: 300px;
+    }
+}
+
+/* ── Visualization Container ── */
+.matrix-viz-container {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.skills-matrix-card-visual {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    min-height: 320px;
+    position: relative;
+}
+
+.matrix-empty-text {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.matrix-empty-placeholder {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    opacity: 0.15;
+    transition: opacity 0.5s ease;
+}
+
+@media (max-width: 768px) {
+    .matrix-skill-tooltip {
+        width: 200px;
+    }
+}
+
+@media (max-width: 520px) {
+    .skills-matrix-stage {
+        padding: 10px 0;
+    }
+
+    .skills-matrix-card {
+        min-height: 390px;
+        padding: 18px 14px;
+        border-radius: 20px;
+    }
+
+    .skills-matrix-card-title {
+        font-size: 17px;
+        letter-spacing: -0.01em;
+    }
+
+    .skills-matrix-card-subtitle {
+        font-size: 9px;
+        margin-top: 4px;
+    }
+
+    .skills-matrix-card-visual,
+    .matrix-viz-container {
+        min-height: 260px;
+    }
+}

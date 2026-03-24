@@ -7,60 +7,66 @@ const PRE_FLIP_DELAY = 150;    // brief pause after bar fills before FLIP starts
 
 export default function IntroScreen({ onComplete }) {
     const nameRef = useRef(null);
-    const [bgFading, setBgFading] = useState(false);   // black bg fades out while name flies
-    const [barFading, setBarFading] = useState(false); // bar + label hide when FLIP starts
-    const [done, setDone] = useState(false);           // removes overlay from DOM
+    const [stage, setStage] = useState('image'); // 'image' -> 'original'
+    const [bgFading, setBgFading] = useState(false);
+    const [barFading, setBarFading] = useState(false);
+    const [done, setDone] = useState(false);
+    const [imageBlinking, setImageBlinking] = useState(false);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            startFlip();
-        }, LOAD_DURATION + PRE_FLIP_DELAY);
+        // 1. Initial Image Phase
+        const blinkTimer = setTimeout(() => {
+            setImageBlinking(true);
+        }, 800);
 
-        return () => clearTimeout(timer);
+        // 2. Transition to Original Loading Phase (disappear image, show name) after 2.2s
+        const originalTimer = setTimeout(() => {
+            setStage('original');
+        }, 2200);
+
+        // 3. Start FLIP after the original loading duration (2s) + prefix (2.2s) + delay
+        const flipTimer = setTimeout(() => {
+            startFlip();
+        }, 2200 + LOAD_DURATION + PRE_FLIP_DELAY);
+
+        return () => {
+            clearTimeout(blinkTimer);
+            clearTimeout(originalTimer);
+            clearTimeout(flipTimer);
+        };
     }, []);
 
     function startFlip() {
         const introEl = nameRef.current;
-
-        // Immediately fade the black background and bar/label
-        // so the site content is revealed underneath as the name flies
-        setBgFading(true);
-        setBarFading(true);
-
         if (!introEl) {
-            setTimeout(() => { onComplete(); setDone(true); }, 800);
+            onComplete();
+            setDone(true);
             return;
         }
 
-        // Locate the target element in the Hero
+        // Fade out overlay elements
+        setBgFading(true);
+        setBarFading(true);
+
         const heroTarget = document.getElementById('flip-target');
         if (!heroTarget) {
             setTimeout(() => { onComplete(); setDone(true); }, 800);
             return;
         }
 
-        // ── FLIP: measure both positions ──
-        // Using double rAF to ensure browser has updated layout for the target
         requestAnimationFrame(() => {
             const introRect = introEl.getBoundingClientRect();
             const heroRect = heroTarget.getBoundingClientRect();
 
-            const introCX = introRect.left + introRect.width / 2;
-            const introCY = introRect.top + introRect.height / 2;
-            const heroCX = heroRect.left + heroRect.width / 2;
-            const heroCY = heroRect.top + heroRect.height / 2;
-
-            const dx = heroCX - introCX;
-            const dy = heroCY - introCY;
+            const dx = (heroRect.left + heroRect.width / 2) - (introRect.left + introRect.width / 2);
+            const dy = (heroRect.top + heroRect.height / 2) - (introRect.top + introRect.height / 2);
             const scale = Math.min(heroRect.width / introRect.width, heroRect.height / introRect.height);
 
-            // Start position: no transform
             introEl.style.transition = 'none';
             introEl.style.transform = 'none';
             introEl.style.opacity = '1';
             introEl.getBoundingClientRect(); // force reflow
 
-            // Animate to hero position; fade out near the end so it "lands" before disappearing
             introEl.style.transition = `
                 transform ${FLIP_DURATION}ms cubic-bezier(0.19, 1, 0.22, 1),
                 opacity   150ms ease ${FLIP_DURATION - 50}ms
@@ -68,30 +74,39 @@ export default function IntroScreen({ onComplete }) {
             introEl.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
             introEl.style.opacity = '0';
 
-            // After FLIP lands: notify parent → triggers staggered site reveal
             setTimeout(() => {
                 onComplete();
-                // Give one more frame then remove overlay entirely
                 requestAnimationFrame(() => setDone(true));
             }, FLIP_DURATION + 50);
         });
     }
 
-
     return (
         <div className={`intro-overlay${done ? ' done' : ''}`}>
-            {/* Black background layer — fades independently */}
+            {/* Background Layers */}
             <div className={`intro-bg${bgFading ? ' fading' : ''}`} />
             <div className={`intro-glow${bgFading ? ' fading' : ''}`} />
 
-            {/* Name — does the FLIP */}
-            <span className="intro-name" ref={nameRef}>Aekansh</span>
-
-            {/* Bar + label — hide when FLIP starts */}
-            <div className={`intro-bar-wrap${barFading ? ' fading' : ''}`}>
-                <div className="intro-bar-fill" />
+            {/* Background Image Layer (Persistent across stages) */}
+            <div className={`intro-image-container${stage === 'original' ? ' stage-2' : ''}`}>
+                <img 
+                    src="/loading.png" 
+                    alt="Loading" 
+                    className={`intro-image${imageBlinking ? ' blinking' : ''}`}
+                />
             </div>
-            <span className={`intro-label${barFading ? ' fading' : ''}`}>Loading</span>
+
+            {/* Stage 2: Original Loading Animation */}
+            {stage === 'original' && (
+                <div className="intro-original-content">
+                    <span className="intro-name" ref={nameRef}>Aekansh</span>
+
+                    <div className={`intro-bar-wrap${barFading ? ' fading' : ''}`}>
+                        <div className="intro-bar-fill" />
+                    </div>
+                    <span className={`intro-label${barFading ? ' fading' : ''}`}>Loading</span>
+                </div>
+            )}
         </div>
     );
 }

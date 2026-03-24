@@ -1,0 +1,262 @@
+/* ══════════════════════════════════════════════════════════
+   LANDSCAPE VIEW
+══════════════════════════════════════════════════════════ */
+
+.landscape-view-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: none !important;
+}
+
+/* Glowing Center Axes */
+.graph-axis {
+    position: absolute;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    z-index: 100;
+}
+
+.axis-x {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    transform: translateY(-50%);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.axis-x::before,
+.axis-x::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 10px solid transparent;
+}
+
+.axis-x::before {
+    left: -10px;
+    border-right: 18px solid #fff;
+}
+
+.axis-x::after {
+    right: -10px;
+    border-left: 18px solid #fff;
+}
+
+.axis-y {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    transform: translateX(-50%);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.axis-y::before,
+.axis-y::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+}
+
+.axis-y::before {
+    top: -10px;
+    border-bottom: 18px solid #fff;
+}
+
+.axis-y::after {
+    bottom: -10px;
+    border-top: 18px solid #fff;
+}
+
+.graph-origin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    box-shadow: 0 0 30px #fff;
+    z-index: 20;
+}
+
+.reveal.visible .graph-origin {
+    animation: pop-origin 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 1s;
+}
+
+@keyframes pop-origin {
+    to {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* 4-Quadrant Grid */
+.skills-quadrants-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: 100%;
+    border: none !important;
+}
+
+.skill-quadrant {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background 0.3s ease;
+    overflow: hidden;
+}
+
+.skill-quadrant:hover {
+    background: rgba(124, 58, 237, 0.02);
+}
+
+.quadrant-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    z-index: 5;
+}
+
+.q-icon {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
+
+.q-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.9;
+}
+
+/* Bubble Arena */
+.bubble-arena {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.skill-bubble {
+    --bubble-color: hsl(calc(var(--color-idx) * 45), 70%, 65%);
+    padding: 10px 22px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(12px);
+    cursor: default;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.reveal.visible .skill-bubble {
+    animation:
+        pop-in-bubble 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards var(--reveal-delay),
+        drift var(--float-duration) ease-in-out infinite calc(var(--reveal-delay) + 1.3s + var(--float-delay));
+}
+
+@keyframes pop-in-bubble {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(12px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.skill-bubble.is-featured {
+    color: var(--bubble-color);
+}
+
+.skill-bubble:hover {
+    background: var(--accent);
+    color: #fff !important;
+    transform: scale(1.15) !important;
+    animation-play-state: paused;
+    box-shadow: 0 0 40px var(--accent);
+    border-color: #fff;
+    z-index: 100;
+}
+
+@keyframes drift {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(var(--tx, 12px), var(--ty, -15px));
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+
+    .graph-axis,
+    .graph-origin {
+        display: none;
+    }
+
+    .skills-quadrants-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        height: auto;
+    }
+
+    .skill-quadrant {
+        padding: 40px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        min-height: 300px;
+    }
+
+    .skill-quadrant:last-child {
+        border-bottom: none;
+    }
+
+    .quadrant-info {
+        justify-content: center;
+        margin-bottom: 24px;
+    }
+
+    .q-title {
+        font-size: 1rem;
+    }
+
+    .skill-bubble {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+        gap: 8px;
+    }
+
+    .bubble-arena {
+        padding: 10px 0;
+    }
+}

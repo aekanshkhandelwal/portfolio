@@ -12,6 +12,7 @@ import {
     ChevronRight
 } from 'lucide-react';
 import './NavigationChannel.css';
+import { scrollToSection as scrollPageToSection } from '../lib/scroll';
 
 const navItems = [
     { id: 'hero', icon: Home, label: 'Home' },
@@ -50,11 +51,8 @@ export default function NavigationChannel() {
         return () => observer.disconnect();
     }, []);
 
-    const scrollToSection = (id) => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
-        }
+    const handleScrollToSection = (id) => {
+        scrollPageToSection(id, { duration: 1 });
     };
 
     return (
@@ -67,7 +65,7 @@ export default function NavigationChannel() {
                         <div
                             key={item.id}
                             className={`channel-item ${activeSection === item.id ? 'active' : ''}`}
-                            onClick={() => scrollToSection(item.id)}
+                            onClick={() => handleScrollToSection(item.id)}
                             onMouseEnter={() => setHoveredLabel(item.label)}
                             onMouseLeave={() => setHoveredLabel(null)}
                         >
