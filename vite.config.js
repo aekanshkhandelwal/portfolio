@@ -11,8 +11,8 @@ export default defineConfig({
     },
   },
   build: {
-    // Warn if a chunk exceeds 500 KB
-    chunkSizeWarningLimit: 500,
+    // Allow larger chunks before warning (useful for heavy graphics/motion libraries)
+    chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
         // Split vendor libraries into separate cacheable chunks
