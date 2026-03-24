@@ -27,8 +27,8 @@ export default defineConfig({
     sourcemap: false,
     // Inline assets smaller than 4KB as base64
     assetsInlineLimit: 4096,
-    // Target modern browsers supporting ES modules
-    target: 'modules',
+    // esbuild no longer accepts "modules" here in Vite 7; use a concrete modern target.
+    target: 'es2020',
   },
   // Optimize dependencies during dev server
   optimizeDeps: {
