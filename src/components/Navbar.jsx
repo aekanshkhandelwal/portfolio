@@ -78,7 +78,7 @@ export default function Navbar() {
     const toggleMenu = () => setIsOpen(!isOpen)
 
     return (
-        <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${visible ? '' : 'hidden'} ${isOpen ? 'menu-open' : ''}`} aria-label="Main Navigation">
+        <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${visible ? '' : 'hidden'} ${isOpen ? 'menu-open' : ''}`}>
             <div className="nav-inner">
                 <a href="#hero" className="nav-logo" onClick={handleScrollToTop}>
                     AK

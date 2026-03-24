@@ -164,10 +164,10 @@ export default function Hero() {
                 >
                     {/* The Spotlight Overlay */}
                     <div className={`hero-content-spotlight ${isSpotlightVisible ? 'visible' : ''}`}>
-                        <div className="hero-title" aria-hidden="true">
+                        <h1 className="hero-title">
                             <span className="title-reveal-part prefix">Hi, I'm</span> <span className="gradient-text spotlight-name">Aekansh</span><br />
                             <span className="title-reveal-part suffix">Data Analyst &amp; Software Developer</span>
-                        </div>
+                        </h1>
                         <p className="hero-subtitle">
                             Building intelligent agentic systems and automating complex workflows.
                             Specializing in AI-driven automation, <strong>Advanced Data Analytics</strong>, and high-impact software solutions.
